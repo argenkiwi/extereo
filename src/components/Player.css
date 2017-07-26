@@ -1,0 +1,6 @@
+.Player {
+    width: 320px;
+    display: grid;
+    grid-template-columns: 270px 50px;
+    align-items: start;
+}

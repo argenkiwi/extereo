@@ -1,0 +1,44 @@
+{
+  "name": "extereo",
+  "version": "3.5.0",
+  "description": "A Chrome Extension to stream audio directly from the sites you visit.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js --optimize-minimize",
+    "watch": "webpack --config webpack.config.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/soflete/extereo-audio-player.git"
+  },
+  "keywords": [
+    "audio",
+    "extension",
+    "mp3",
+    "ogg",
+    "opus"
+  ],
+  "author": "Leandro M. Peralta",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/soflete/extereo-audio-player#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.0.47",
+    "@types/react": "^15.0.39",
+    "@types/react-dom": "^15.5.1",
+    "css-loader": "^0.28.4",
+    "file-loader": "^0.11.2",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "^0.18.2",
+    "ts-loader": "^2.3.1",
+    "typescript": "^2.4.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.3.0"
+  },
+  "dependencies": {
+    "playlist-parser": "^0.0.12",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "rxjs": "^5.4.2"
+  }
+}

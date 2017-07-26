@@ -1,0 +1,26 @@
+.Playlist {
+    width: 320px;
+    height: 320px;
+    display: grid;
+    grid-gap: .8em;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 21px auto 1fr auto;
+}
+
+.Playlist > :first-child {
+    grid-column: 1/2;
+    align-self: end;
+}
+
+.Playlist > :nth-child(2) {
+    grid-column: 2/3;
+    justify-self: end;
+}
+
+.Playlist > :last-child {
+    justify-self: end;
+}
+
+.Playlist > * {
+    grid-column: 1/3;
+}

@@ -1,0 +1,16 @@
+.FoundItem {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr auto;
+    padding: .3em;
+}
+
+.FoundItem > :first-child {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.FoundItem:hover {
+    background-color: lightgray;
+}

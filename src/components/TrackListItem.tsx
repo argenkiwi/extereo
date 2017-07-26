@@ -17,12 +17,13 @@ function TrackListItem({ playing, track, position }: Props) {
 
     return (
         <li className="TrackListItem">
-            {playing
-                ? <strong>{track.title}</strong>
-                : <span>{track.title}</span>}
+            {playing ?
+                <strong>{track.title}</strong> :
+                <span>{track.title}</span>
+            }
             <button onClick={() => jump(position)} disabled={playing}>P</button>
             <button onClick={() => remove(position)}>X</button>
-        </li >
+        </li>
     );
 }
 

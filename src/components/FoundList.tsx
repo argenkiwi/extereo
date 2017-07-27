@@ -4,7 +4,11 @@ import Track from '../model/Track';
 import FoundItem from './FoundItem';
 import './FoundList.css';
 
-function FoundList({ tracks }: { tracks: Track[] }) {
+interface Props extends React.HTMLProps<HTMLOListElement> {
+    tracks: Track[];
+}
+
+function FoundList({ tracks }: Props) {
     return (
         <ol className="FoundList">
             <li>

@@ -1,16 +1,17 @@
 .TrackListItem {
     display: grid;
-    align-items: center;
+    grid-gap: .2em;
     grid-template-columns: 1fr auto auto;
+    align-items: center;
     padding: .3em;
+}
+
+.TrackListItem:hover {
+    background-color: lightgrey;
 }
 
 .TrackListItem > :first-child {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
-
-.TrackListItem:hover {
-    background-color: lightgrey;
 }

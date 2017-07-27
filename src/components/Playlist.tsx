@@ -4,14 +4,15 @@ import Message from '../model/Message';
 import Track from '../model/Track';
 import PlayerState from '../model/PlayerState';
 import PlaylistState from '../model/PlaylistState';
-import { clear, ping, seek } from '../service';
+import { ping, seek } from '../service';
 import BaseComponent from './BaseComponent';
-import Controls from './Controls';
+import Header from './Header';
 import SeekBar from './SeekBar';
 import TrackList from './TrackList';
+import Footer from './Footer';
 import './Playlist.css';
 
-interface Props extends BaseComponent.Props, React.HTMLProps<HTMLDivElement> {}
+interface Props extends BaseComponent.Props, React.HTMLProps<HTMLDivElement> { }
 
 interface State {
     playerState: PlayerState;
@@ -20,7 +21,7 @@ interface State {
 
 class Playlist extends BaseComponent<Props, State> {
 
-    constructor(props:Props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             playerState: {
@@ -61,8 +62,7 @@ class Playlist extends BaseComponent<Props, State> {
         const { playerState, playlistState } = this.state;
         return (
             <div className="Playlist">
-                <strong>PLAYLIST</strong>
-                <Controls paused={playerState.paused} />
+                <Header paused={playerState.paused} />
                 <SeekBar
                     elapsed={playerState.elapsed}
                     duration={playerState.duration}
@@ -72,38 +72,10 @@ class Playlist extends BaseComponent<Props, State> {
                     position={playlistState.position}
                     tracks={playlistState.tracks}
                 />
-                <div>
-                    <button
-                        disabled={!playlistState.tracks.length}
-                        onClick={() => allowExportToM3U(playlistState.tracks)}
-                    >Export</button>
-                    <button
-                        disabled={!playlistState.tracks.length}
-                        onClick={() => clear()}
-                    >Clear</button>
-                </div>
+                <Footer tracks={playlistState.tracks} />
             </div>
         );
     }
-}
-
-function allowExportToM3U(tracks: Track[]) {
-    chrome.permissions.request({
-        permissions: ['downloads']
-    }, function (granted) {
-        if (granted) exportToM3U(tracks);
-    });
-}
-
-function exportToM3U(tracks: Track[]) {
-    const urls = tracks.map(track => track.href).join('\n');
-    const blob = new Blob([urls], {
-        type: 'application/x-mpegurl'
-    });
-    chrome.downloads.download({
-        url: window.URL.createObjectURL(blob),
-        filename: 'playlist.m3u'
-    });
 }
 
 export default Playlist;

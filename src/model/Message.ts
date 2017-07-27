@@ -18,7 +18,8 @@ module Message {
         Previous,
         Remove,
         Scan,
-        Seek
+        Seek,
+        Sort
     }
 }
 

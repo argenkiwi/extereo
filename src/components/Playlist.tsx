@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Observable, Subscription } from 'rxjs';
+import { SortEndHandler } from 'react-sortable-hoc';
 import Message from '../model/Message';
 import Track from '../model/Track';
 import PlayerState from '../model/PlayerState';
 import PlaylistState from '../model/PlaylistState';
-import { ping, seek } from '../service';
+import { ping, seek, sort } from '../service';
 import BaseComponent from './BaseComponent';
 import Header from './Header';
 import SeekBar from './SeekBar';
@@ -57,6 +58,10 @@ class Playlist extends BaseComponent<Props, State> {
         ping();
     }
 
+    onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
+        sort(oldIndex, newIndex);
+    }
+
     render() {
         const { message$ } = this.props;
         const { playerState, playlistState } = this.state;
@@ -71,6 +76,7 @@ class Playlist extends BaseComponent<Props, State> {
                 <TrackList
                     position={playlistState.position}
                     tracks={playlistState.tracks}
+                    onSortEnd={this.onSortEnd}
                 />
                 <Footer tracks={playlistState.tracks} />
             </div>

@@ -1,4 +1,5 @@
 import { Observable, Subject } from 'rxjs';
+import { arrayMove } from 'react-sortable-hoc';
 import Message from './model/Message';
 import Track from './model/Track';
 import PlayerState from './model/PlayerState';
@@ -134,7 +135,26 @@ message$
 message$
     .filter(message => message.type == Message.Type.Seek)
     .map((message: Message<number>) => message.content)
-    .subscribe(time => audio.currentTime = time)
+    .subscribe(time => audio.currentTime = time);
+
+
+const sort = ({ from, to }: {
+    from: number,
+    to: number
+}, { position, tracks }: PlaylistState) => ({
+    position: position < from ? (
+        position >= to ? position + 1 : position
+    ) : (position == from ? to : (
+        position > to ? position : position - 1
+    )),
+    tracks: arrayMove(Array.from(tracks), from, to)
+});
+
+message$
+    .filter(message => message.type == Message.Type.Sort)
+    .map((message: Message<{ from: number, to: number }>) => message.content)
+    .withLatestFrom(playlist$, sort)
+    .subscribe(playlist)
 
 const ping$ = message$.filter(message => message.type == Message.Type.Ping)
 ping$.withLatestFrom(player$, (message, state) => state).subscribe(player);

@@ -98,6 +98,13 @@ export function playlist(playlistState: PlaylistState) {
     });
 }
 
+export function sort(from: number, to: number) {
+    send({
+        type: Message.Type.Sort,
+        content: { from, to }
+    });
+}
+
 function send(message: Message<any>) {
     chrome.runtime.sendMessage(message);
 }

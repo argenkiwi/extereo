@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SortableElement } from 'react-sortable-hoc';
 import { jump, remove } from '../service';
 import Track from '../model/Track';
 import './TrackListItem.css';
@@ -10,11 +11,6 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
 }
 
 function TrackListItem({ playing, track, position }: Props) {
-    const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
-        jump(position);
-    };
-
     return (
         <li className="TrackListItem">
             {playing ?
@@ -27,4 +23,4 @@ function TrackListItem({ playing, track, position }: Props) {
     );
 }
 
-export default TrackListItem;
+export default SortableElement<Props>(TrackListItem);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SortableElement } from 'react-sortable-hoc';
+import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { jump, remove } from '../service';
 import Track from '../model/Track';
 import './TrackListItem.css';
@@ -10,15 +10,23 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
     position: number;
 }
 
+const Handle = SortableHandle(() => <span style={{
+    padding: '.4em',
+    cursor: 'move'
+}}>&#9776;</span>);
+
 function TrackListItem({ playing, track, position }: Props) {
     return (
         <li className="TrackListItem">
-            {playing ?
-                <strong>{track.title}</strong> :
-                <span>{track.title}</span>
-            }
+            <a href={track.href} target="_blank">
+                {playing ?
+                    <strong>{track.title}</strong> :
+                    <span>{track.title}</span>
+                }
+            </a>
             <button onClick={() => jump(position)} disabled={playing}>P</button>
             <button onClick={() => remove(position)}>X</button>
+            <Handle />
         </li>
     );
 }

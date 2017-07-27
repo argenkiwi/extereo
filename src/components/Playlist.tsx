@@ -77,6 +77,7 @@ class Playlist extends BaseComponent<Props, State> {
                     position={playlistState.position}
                     tracks={playlistState.tracks}
                     onSortEnd={this.onSortEnd}
+                    useDragHandle={true}
                 />
                 <Footer tracks={playlistState.tracks} />
             </div>

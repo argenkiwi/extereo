@@ -142,7 +142,7 @@ const sort = ({ from, to }: {
     to: number
 }, { position, tracks }: PlaylistState) => ({
     position: position < from && position >= to ? position + 1 : (
-        position > from && position < to ? position - 1 : (
+        position > from && position <= to ? position - 1 : (
             position === from ? to : position
         )
     ),

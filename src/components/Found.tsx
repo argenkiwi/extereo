@@ -2,9 +2,8 @@ import * as React from 'react';
 import { Observable } from 'rxjs';
 import Message from '../model/Message';
 import Track from '../model/Track';
-import { add } from '../service';
 import { regexExt, regexM3U } from '../filters';
-import FoundItem from './FoundItem';
+import FoundList from './FoundList';
 import PlaylistItem from './PlaylistItem';
 import './Found.css';
 
@@ -18,15 +17,9 @@ function Found(props: Props) {
     return (
         <div className="Found">
             <strong>ON THIS PAGE</strong>
-            <button
-                disabled={!tracks.length}
-                onClick={() => add(...tracks)}
-            >Add All</button>
             <div>
                 {tracks.length > 0 &&
-                    <ol>{tracks.map(track =>
-                        <FoundItem key={track.href} track={track} />
-                    )}</ol>
+                    <FoundList tracks={tracks} />
                 }
                 {playlists.length > 0 && playlists.map(playlist =>
                     <PlaylistItem key={playlist.href} track={playlist} />

@@ -12,7 +12,7 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
 }
 
 function Found(props: Props) {
-    const tracks = props.tracks.filter(({ href }) => regexExt.test(href));
+    const tracks = props.tracks.filter(({ href }) => !regexM3U.test(href));
     const playlists = props.tracks.filter(({ href }) => regexM3U.test(href));
     return (
         <div className="Found">

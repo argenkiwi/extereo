@@ -44,8 +44,8 @@ class PlaylistItem extends React.Component<Props, { tracks: Track[] }>{
                 <li key={track.href}>
                     <span>{track.title}</span>
                     {tracks.length > 0 ?
-                        <button onClick={() => add(...tracks)}>++</button> :
-                        <button onClick={() => this.load(track.href)}>v</button>
+                        <button onClick={() => add(...tracks)}>Add All</button> :
+                        <button onClick={() => this.load(track.href)}>Load</button>
                     }
                 </li>
                 {tracks.length > 0 && tracks.map(track =>

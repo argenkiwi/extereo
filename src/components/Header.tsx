@@ -1,9 +1,11 @@
 import * as React from 'react';
-import  { previous, next, play, pause }  from '../service';
+import { previous, next, play, pause } from '../service';
+import './Header.css';
 
-function Controls({ paused }: { paused: boolean }) {
+function Header({ paused }: { paused: boolean }) {
     return (
-        <div>
+        <div className="Header">
+            <strong>PLAYLIST</strong>
             <button onClick={() => previous()}>Prev</button>
             {paused
                 ? <button onClick={() => play()}>Play</button>
@@ -14,4 +16,4 @@ function Controls({ paused }: { paused: boolean }) {
     );
 }
 
-export default Controls;
+export default Header;

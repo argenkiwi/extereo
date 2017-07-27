@@ -3,7 +3,6 @@
     height: 320px;
     display: grid;
     grid-gap: .8em;
-    grid-template-columns: 1fr auto;
     grid-template-rows: 21px 1fr;
     margin-right: .8em;
 }

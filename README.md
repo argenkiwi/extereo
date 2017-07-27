@@ -4,8 +4,8 @@ This is the source code for [Extereo Audio Player](https://chrome.google.com/web
 - Node and npm
 
 ## Installation
-- Clone the repository in a folder of your preference: `git clone https://soflete@bitbucket.org/soflete/extereo-audio-player.git`.
-- Go to the project folder: `cd extereo-audio-player`.
+- Clone the repository in a folder of your preference: `git clone git@github.com:soflete/extereo.git`.
+- Go to the project folder: `cd extereo`.
 - Install the dependencies with `npm install`.
 - Build project with `npm build` or run watch mode with `npm run watch`.
 - In Google Chrome, go to `chrome://extensions/`.

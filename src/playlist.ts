@@ -130,23 +130,22 @@ message$
         position: position < state.position ? state.position - 1 : state.position,
         tracks: state.tracks.slice(0, position).concat(state.tracks.slice(position + 1))
     }))
-    .subscribe(playlist)
+    .subscribe(playlist);
 
 message$
     .filter(message => message.type == Message.Type.Seek)
     .map((message: Message<number>) => message.content)
     .subscribe(time => audio.currentTime = time);
 
-
 const sort = ({ from, to }: {
     from: number,
     to: number
 }, { position, tracks }: PlaylistState) => ({
-    position: position < from ? (
-        position >= to ? position + 1 : position
-    ) : (position == from ? to : (
-        position > to ? position : position - 1
-    )),
+    position: position < from && position >= to ? position + 1 : (
+        position > from && position < to ? position - 1 : (
+            position === from ? to : position
+        )
+    ),
     tracks: arrayMove(Array.from(tracks), from, to)
 });
 

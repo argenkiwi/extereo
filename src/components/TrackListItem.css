@@ -6,12 +6,44 @@
     padding: .3em;
 }
 
+.TrackListItem > button {
+    display: none;
+}
+
 .TrackListItem:hover {
     background-color: lightgrey;
+}
+
+.TrackListItem:hover > button {
+    display: inline;
 }
 
 .TrackListItem > :first-child {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.Handle {
+  content: '....';
+  width: 10px;
+  height: 20px;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 5px;
+  padding: 3px 4px;
+  cursor: move;
+  vertical-align: middle;
+  margin-top: -.7em;
+  margin-right: .3em;
+  font-size: 12px;
+  font-family: sans-serif;
+  letter-spacing: 2px;
+  color: #cccccc;
+  text-shadow: 1px 0 1px black;
+  grid-column: 4/5;
+}
+
+.Handle::after {
+  content: '.. .. .. ..';
 }

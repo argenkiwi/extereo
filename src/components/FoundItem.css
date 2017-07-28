@@ -5,6 +5,10 @@
     padding: .3em;
 }
 
+.FoundItem > button {
+    display: none;
+}
+
 .FoundItem > :first-child {
     overflow: hidden;
     white-space: nowrap;
@@ -13,4 +17,8 @@
 
 .FoundItem:hover {
     background-color: lightgray;
+}
+
+.FoundItem:hover > button {
+    display: inline;
 }

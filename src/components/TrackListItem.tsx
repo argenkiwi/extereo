@@ -10,10 +10,7 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
     position: number;
 }
 
-const Handle = SortableHandle(() => <span style={{
-    padding: '.4em',
-    cursor: 'move'
-}}>&#9776;</span>);
+const Handle = SortableHandle(() => <span className="Handle" />);
 
 function TrackListItem({ playing, track, position }: Props) {
     return (
@@ -24,8 +21,12 @@ function TrackListItem({ playing, track, position }: Props) {
                     <span>{track.title}</span>
                 }
             </a>
-            <button onClick={() => jump(position)} disabled={playing}>P</button>
-            <button onClick={() => remove(position)}>X</button>
+            <button onClick={() => jump(position)} disabled={playing}>
+                <i className="icon-play-circled"></i>
+            </button>
+            <button onClick={() => remove(position)}>
+                <i className="icon-cancel-circled"></i>
+            </button>
             <Handle />
         </li>
     );

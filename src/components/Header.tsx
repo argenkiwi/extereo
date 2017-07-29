@@ -6,12 +6,20 @@ function Header({ paused }: { paused: boolean }) {
     return (
         <div className="Header">
             <strong>PLAYLIST</strong>
-            <button onClick={() => previous()}>Prev</button>
+            <button onClick={() => previous()}>
+                <i className="icon-prev"></i>
+            </button>
             {paused
-                ? <button onClick={() => play()}>Play</button>
-                : <button onClick={() => pause()}>Pause</button>
+                ? <button onClick={() => play()}>
+                    <i className="icon-play"></i>
+                </button>
+                : <button onClick={() => pause()}>
+                    <i className="icon-pause"></i>
+                </button>
             }
-            <button onClick={() => next()}>Next</button>
+            <button onClick={() => next()}>
+                <i className="icon-next"></i>
+            </button>
         </div>
     );
 }

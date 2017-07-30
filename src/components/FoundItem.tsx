@@ -12,7 +12,9 @@ function FoundItem({ track }: Props) {
     return (
         <li className="FoundItem">
             <a href={track.href} target="_blank">{track.title}</a>
-            <button onClick={() => add(track)}>+</button>
+            <button onClick={() => add(track)}>
+                <i className="icon-plus-circled"></i>
+            </button>
         </li>
     );
 }

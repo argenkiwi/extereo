@@ -40,20 +40,15 @@ class Playlist extends BaseComponent<Props, State> {
     componentDidMount() {
         const { message$ } = this.props;
 
-        const playerState$ = message$
+        this.subscriptions.push(message$
             .filter(message => message.type == Message.Type.Player)
-            .map((message: Message<PlayerState>) => message.content);
+            .map((message: Message<PlayerState>) => message.content)
+            .subscribe(playerState => this.setState({ playerState })));
 
-        const playListState$ = message$
+        this.subscriptions.push(message$
             .filter(message => message.type == Message.Type.Playlist)
-            .map((message: Message<PlaylistState>) => message.content);
-
-        this.subscriptions.push(playerState$
-            .combineLatest(playListState$, (playerState, playlistState) => ({
-                playerState: playerState,
-                playlistState: playlistState
-            }))
-            .subscribe(state => this.setState(state)));
+            .map((message: Message<PlaylistState>) => message.content)
+            .subscribe(playlistState => this.setState({ playlistState })));
 
         ping();
     }

@@ -10,7 +10,7 @@ interface Props extends React.HTMLProps<HTMLDivElement>, BaseComponent.Props { }
 
 class PopUp extends BaseComponent<Props, { tracks: Track[] }>{
 
-    constructor(props:Props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             tracks: []
@@ -29,7 +29,7 @@ class PopUp extends BaseComponent<Props, { tracks: Track[] }>{
                 <Found tracks={tracks} />
                 <Playlist message$={message$} />
             </div> :
-            <div style={{ width: 320 }}>
+            <div style={{ width: 320, display: 'flex' }}>
                 <Playlist message$={message$} />
             </div>
         );

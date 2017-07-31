@@ -5,6 +5,7 @@ import Track from '../model/Track';
 import BaseComponent from './BaseComponent';
 import Found from './Found';
 import Playlist from './Playlist';
+import './PopUp.css';
 
 interface Props extends React.HTMLProps<HTMLDivElement>, BaseComponent.Props { }
 
@@ -24,12 +25,11 @@ class PopUp extends BaseComponent<Props, { tracks: Track[] }>{
     render() {
         const { message$ } = this.props;
         const { tracks } = this.state;
-        return (tracks && tracks.length ?
-            <div style={{ width: 640, display: 'flex' }}>
-                <Found tracks={tracks} />
-                <Playlist message$={message$} />
-            </div> :
-            <div style={{ width: 320, display: 'flex' }}>
+        return (
+            <div className="PopUp" style={{ width: tracks.length > 0 ? 640 : 320 }}>
+                {tracks.length > 0 &&
+                    <Found tracks={tracks} />
+                }
                 <Playlist message$={message$} />
             </div>
         );

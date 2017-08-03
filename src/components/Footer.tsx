@@ -43,7 +43,7 @@ function exportToHTML(tracks: Track[]) {
     });
     html.body.appendChild(ul);
 
-    const blob = new Blob([html.documentElement.outerHTML], {
+    const blob = new Blob(['<!doctype html>', html.documentElement.outerHTML], {
         type: 'text/html'
     });
 

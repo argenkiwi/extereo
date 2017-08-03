@@ -1,14 +1,7 @@
 .Found {
-    width: 320px;
-    height: 320px;
     display: grid;
     grid-gap: .8em;
-    grid-template-rows: 21px 1fr;
-    margin-right: .8em;
-}
-
-.Found > :first-child {
-    align-self: end;
+    grid-template-rows: auto 1fr;
 }
 
 .Found > :last-child {

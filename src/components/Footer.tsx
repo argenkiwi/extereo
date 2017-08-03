@@ -12,7 +12,7 @@ function Footer({ tracks }: Props) {
         <div className="Footer">
             <button
                 disabled={!tracks.length}
-                onClick={() => allowExportToM3U(tracks)}
+                onClick={() => allowDownload(tracks)}
             >Export</button>
             <button
                 disabled={!tracks.length}
@@ -22,15 +22,15 @@ function Footer({ tracks }: Props) {
     );
 }
 
-function allowExportToM3U(tracks: Track[]) {
+function allowDownload(tracks: Track[]) {
     chrome.permissions.request({
         permissions: ['downloads']
     }, function (granted) {
-        if (granted) exportToM3U(tracks);
+        if (granted) exportToHTML(tracks);
     });
 }
 
-function exportToM3U(tracks: Track[]) {
+function exportToHTML(tracks: Track[]) {
     const html = document.implementation.createHTMLDocument('Extereo Playlist');
     const ul = html.createElement('ol');
     tracks.forEach(track => {
@@ -49,7 +49,8 @@ function exportToM3U(tracks: Track[]) {
 
     chrome.downloads.download({
         url: URL.createObjectURL(blob),
-        filename: 'playlist.html'
+        filename: 'playlist.html',
+        saveAs: true
     });
 }
 

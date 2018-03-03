@@ -27,9 +27,9 @@ class PopUp extends BaseComponent<Props, { tracks: Track[] }>{
         const { tracks } = this.state;
         return (
             <div className="PopUp" style={{
-                gridTemplateColumns: tracks.length > 0 ? '320px 320px' : '320px'
+                gridTemplateColumns: tracks && tracks.length > 0 ? '320px 320px' : '320px'
             }}>
-                {tracks.length > 0 &&
+                {tracks && tracks.length > 0 &&
                     <Found tracks={tracks} />
                 }
                 <Playlist message$={message$} />

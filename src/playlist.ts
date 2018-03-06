@@ -19,11 +19,11 @@ const playlist$ = playlist.startWith({
     position: 0
 }).scan((acc, value) => ({ ...acc, ...value }))
 
-const message$ = Observable.fromEventPattern((h: (message: Message<any>) => void) => {
+const message$ = Observable.fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
-}, (h: (message: Message<any>) => void) => {
+}, (h: (message: Message) => void) => {
     chrome.runtime.onMessage.removeListener(h);
-}, (message: Message<any>) => message)
+}, (message: Message) => message)
 
 const command$ = Observable.fromEventPattern((h: (command: string) => void) => {
     chrome.commands.onCommand.addListener(h);
@@ -70,50 +70,61 @@ playlist$
 player$.subscribe(reportPlayerState);
 playlist$.subscribe(reportPlaylistState);
 
-message$
-    .filter(message => message.type == Message.Type.Add)
-    .map((message: Message<Track[]>) => message.content)
-    .withLatestFrom(playlist$, (tracks, state): PlaylistState => ({
-        tracks: state.tracks.concat(tracks)
-    }))
-    .subscribe(playlist)
+message$.withLatestFrom(playlist$, (message: Message, state: PlaylistState): PlaylistState => {
+    switch (message.kind) {
+        case Message.Kind.Add:
+            return { ...state, tracks: state.tracks.concat(message.tracks) }
+        case Message.Kind.Clear:
+            return { ...state, tracks: [], position: 0 }
+        case Message.Kind.Jump:
+            return { ...state, position: message.position }
+        case Message.Kind.Previous:
+            return state.position > 0 ? { ...state, position: state.position - 1 } : state
+        case Message.Kind.Next:
+            return state.position < state.tracks.length ? {
+                ...state,
+                position: state.position + 1
+            } : state
+        case Message.Kind.Remove:
+            return {
+                ...state,
+                position: message.position < state.position ? state.position - 1 : state.position,
+                tracks: state.tracks.slice(0, message.position).concat(state.tracks.slice(message.position + 1))
+            }
+        case Message.Kind.Sort:
+            const { position, tracks } = state
+            const { from, to } = message
+            return {
+                ...state,
+                position: position < from && position >= to ? position + 1 : (
+                    position > from && position <= to ? position - 1 : (
+                        position === from ? to : position
+                    )
+                ),
+                tracks: arrayMove(Array.from(tracks), from, to)
+            }
+    }
+}).subscribe(playlist)
 
-message$
-    .filter(message => message.type == Message.Type.Clear)
-    .map((): PlaylistState => ({ tracks: [], position: 0 }))
-    .subscribe(playlist)
-
-message$
-    .filter(message => message.type == Message.Type.Jump)
-    .map((message: Message<number>) => message.content)
-    .withLatestFrom(playlist$, (position, state): PlaylistState => ({
-        position: position
-    }))
-    .subscribe(playlist)
-
-message$
-    .filter(message => message.type == Message.Type.Previous)
-    .merge(command$.filter(command => command === 'prev-track'))
+command$.filter(command => command === 'prev-track')
     .withLatestFrom(playlist$, (event, state): PlaylistState => state.position > 0 ? {
         position: state.position - 1
     } : state)
     .subscribe(playlist)
 
 message$
-    .filter(message => message.type == Message.Type.Play)
+    .filter((message: Message) => message.kind === Message.Kind.Play)
     .subscribe(() => audio.play())
 
 message$
-    .filter(message => message.type == Message.Type.Pause)
+    .filter((message: Message) => message.kind === Message.Kind.Pause)
     .subscribe(() => audio.pause())
 
 command$
     .filter(command => command === 'play-pause')
     .subscribe(() => audio.paused ? audio.play() : audio.pause())
 
-message$
-    .filter(message => message.type == Message.Type.Next)
-    .merge(command$.filter(command => command === 'next-track'))
+command$.filter(command => command === 'next-track')
     .merge(Observable.fromEvent(audio, 'ended'))
     .merge(Observable.fromEvent(audio, 'error'))
     .withLatestFrom(playlist$, (event, state): PlaylistState => {
@@ -124,37 +135,9 @@ message$
     .subscribe(playlist)
 
 message$
-    .filter(message => message.type == Message.Type.Remove)
-    .map((message: Message<number>) => message.content)
-    .withLatestFrom(playlist$, (position, state): PlaylistState => ({
-        position: position < state.position ? state.position - 1 : state.position,
-        tracks: state.tracks.slice(0, position).concat(state.tracks.slice(position + 1))
-    }))
-    .subscribe(playlist);
+    .filter((message: Message) => message.kind == Message.Kind.Seek)
+    .subscribe((message: Message.Seek) => audio.currentTime = message.kind);
 
-message$
-    .filter(message => message.type == Message.Type.Seek)
-    .map((message: Message<number>) => message.content)
-    .subscribe(time => audio.currentTime = time);
-
-const sort = ({ from, to }: {
-    from: number,
-    to: number
-}, { position, tracks }: PlaylistState) => ({
-    position: position < from && position >= to ? position + 1 : (
-        position > from && position <= to ? position - 1 : (
-            position === from ? to : position
-        )
-    ),
-    tracks: arrayMove(Array.from(tracks), from, to)
-});
-
-message$
-    .filter(message => message.type == Message.Type.Sort)
-    .map((message: Message<{ from: number, to: number }>) => message.content)
-    .withLatestFrom(playlist$, sort)
-    .subscribe(playlist)
-
-const ping$ = message$.filter(message => message.type == Message.Type.Ping)
+const ping$ = message$.filter((message: Message) => message.kind == Message.Kind.Ping)
 ping$.withLatestFrom(player$, (message, state) => state).subscribe(player);
 ping$.withLatestFrom(playlist$, (message, state) => state).subscribe(playlist)

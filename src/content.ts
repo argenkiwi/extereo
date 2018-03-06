@@ -23,6 +23,6 @@ Array.from(document.querySelectorAll("source"))
 const tracks = Array.from(map, pair => ({ href: pair[0], title: pair[1] }));
 
 chrome.runtime.onMessage
-    .addListener((message: Message<any>, sender: any, callback: (tracks: Track[]) => void) => {
-        if (message.type === Message.Type.Scan) callback(tracks);
+    .addListener((message: Message, sender: any, callback: (tracks: Track[]) => void) => {
+        if (message.kind === Message.Kind.Scan) callback(tracks);
     });

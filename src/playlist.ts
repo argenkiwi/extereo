@@ -1,18 +1,12 @@
-import { Observable, Subject } from 'rxjs';
-import { arrayMove } from 'react-sortable-hoc';
-import Message from './model/Message';
-import Track from './model/Track';
-import PlayerState from './model/PlayerState';
-import PlaylistState from './model/PlaylistState';
-import { player as reportPlayerState, playlist as reportPlaylistState } from './service';
-import StateEventModel from './core/StateEventModel';
-
-const player: Subject<PlayerState> = new Subject()
-const player$ = player.startWith<PlayerState>({
-    duration: 0,
-    elapsed: 0,
-    paused: true
-}).scan((acc, value) => ({ ...acc, ...value }))
+import { Observable, Subject } from 'rxjs'
+import { arrayMove } from 'react-sortable-hoc'
+import Message from './model/Message'
+import Track from './model/Track'
+import PlayerEvent from './model/PlayerEvent'
+import PlayerState from './model/PlayerState'
+import PlaylistState from './model/PlaylistState'
+import { player as reportPlayerState, playlist as reportPlaylistState } from './service'
+import StateEventModel from './core/StateEventModel'
 
 const message$ = Observable.fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
@@ -26,87 +20,131 @@ const command$ = Observable.fromEventPattern((h: (command: string) => void) => {
     chrome.commands.onCommand.removeListener(h);
 }, (command: string) => command)
 
+const playerModel = new StateEventModel<PlayerState, PlayerEvent>(
+    (state, event) => {
+        switch (event.kind) {
+            case PlayerEvent.Kind.Play:
+                return {
+                    ...state,
+                    paused: false
+                }
+            case PlayerEvent.Kind.Pause:
+                return {
+                    ...state,
+                    paused: true
+                }
+            case PlayerEvent.Kind.DurationChange:
+                return {
+                    ...state,
+                    duration: event.duration
+                }
+            case PlayerEvent.Kind.TimeUpdate:
+                return {
+                    ...state,
+                    elapsed: event.time
+                }
+            default:
+                return state;
+        }
+    }, {
+        duration: 0,
+        elapsed: 0,
+        paused: true
+    }
+)
+
+playerModel.stateObservable.subscribe(reportPlayerState)
+
 const audio = document.createElement('audio')
 
 Observable.fromEvent(audio, 'play')
-    .merge(Observable.fromEvent(audio, 'pause'))
-    .withLatestFrom(player$, (event, state): PlayerState => ({
-        paused: audio.paused
+    .subscribe(_ => playerModel.publish({
+        kind: PlayerEvent.Kind.Play
     }))
-    .subscribe(player)
+
+Observable.fromEvent(audio, 'pause')
+    .subscribe(_ => playerModel.publish({
+        kind: PlayerEvent.Kind.Pause
+    }))
 
 Observable.fromEvent(audio, 'durationchange')
-    .withLatestFrom(player$, (event, state): PlayerState => ({
+    .subscribe(_ => playerModel.publish({
+        kind: PlayerEvent.Kind.DurationChange,
         duration: audio.duration
     }))
-    .subscribe(player)
 
 Observable.fromEvent(audio, 'timeupdate').debounce(() => Observable.timer(100))
-    .withLatestFrom(player$, (event, state): PlayerState => ({
-        elapsed: audio.currentTime
+    .subscribe(_ => playerModel.publish({
+        kind: PlayerEvent.Kind.TimeUpdate,
+        time: audio.currentTime
     }))
-    .subscribe(player)
 
-player$.subscribe(reportPlayerState);
-
-message$
-    .filter((message: Message) => message.kind === Message.Kind.Play)
-    .subscribe(() => audio.play())
-
-message$
-    .filter((message: Message) => message.kind === Message.Kind.Pause)
-    .subscribe(() => audio.pause())
+message$.subscribe(message => {
+    switch (message.kind) {
+        case Message.Kind.Play:
+            audio.play()
+            break
+        case Message.Kind.Pause:
+            audio.pause()
+            break
+        case Message.Kind.Seek:
+            audio.currentTime = message.time
+            break
+    }
+})
 
 command$
     .filter(command => command === 'play-pause')
-    .subscribe(() => audio.paused ? audio.play() : audio.pause())
+    .subscribe(_ => audio.paused ? audio.play() : audio.pause())
 
 message$
-    .filter((message: Message) => message.kind == Message.Kind.Seek)
-    .subscribe((message: Message.Seek) => audio.currentTime = message.kind);
+    .filter((message: Message) => message.kind == Message.Kind.Ping)
+    .subscribe(message => playerModel.publish({ kind: null }))
 
-const ping$ = message$.filter((message: Message) => message.kind == Message.Kind.Ping)
-ping$.withLatestFrom(player$, (message, state) => state).subscribe(player);
-
-const playlistModel = new StateEventModel<PlaylistState, Message>((state, message) => {
-    switch (message.kind) {
-        case Message.Kind.Add:
-            return { ...state, tracks: state.tracks.concat(message.tracks) }
-        case Message.Kind.Clear:
-            return { ...state, tracks: [], position: 0 }
-        case Message.Kind.Jump:
-            return { ...state, position: message.position }
-        case Message.Kind.Previous:
-            return state.position > 0 ? { ...state, position: state.position - 1 } : state
-        case Message.Kind.Next:
-            return state.position < state.tracks.length ? {
-                ...state,
-                position: state.position + 1
-            } : state
-        case Message.Kind.Remove:
-            return {
-                ...state,
-                position: message.position < state.position ? state.position - 1 : state.position,
-                tracks: state.tracks
-                    .slice(0, message.position)
-                    .concat(state.tracks.slice(message.position + 1))
-            }
-        case Message.Kind.Sort:
-            const { position, tracks } = state
-            const { from, to } = message
-            return {
-                ...state,
-                position: position < from && position >= to ? position + 1 : (
-                    position > from && position <= to ? position - 1 : (
-                        position === from ? to : position
-                    )
-                ),
-                tracks: arrayMove(Array.from(tracks), from, to)
-            }
-        default:
-            return state;
+const playlistModel = new StateEventModel<PlaylistState, Message>(
+    (state, message) => {
+        switch (message.kind) {
+            case Message.Kind.Add:
+                return { ...state, tracks: state.tracks.concat(message.tracks) }
+            case Message.Kind.Clear:
+                return { ...state, tracks: [], position: 0 }
+            case Message.Kind.Jump:
+                return { ...state, position: message.position }
+            case Message.Kind.Previous:
+                return state.position > 0 ? { ...state, position: state.position - 1 } : state
+            case Message.Kind.Next:
+                return state.position < state.tracks.length ? {
+                    ...state,
+                    position: state.position + 1
+                } : state
+            case Message.Kind.Remove:
+                return {
+                    ...state,
+                    position: message.position < state.position ? state.position - 1 : state.position,
+                    tracks: state.tracks
+                        .slice(0, message.position)
+                        .concat(state.tracks.slice(message.position + 1))
+                }
+            case Message.Kind.Sort:
+                const { position, tracks } = state
+                const { from, to } = message
+                return {
+                    ...state,
+                    position: position < from && position >= to ? position + 1 : (
+                        position > from && position <= to ? position - 1 : (
+                            position === from ? to : position
+                        )
+                    ),
+                    tracks: arrayMove(Array.from(tracks), from, to)
+                }
+            default:
+                return state;
+        }
+    }, {
+        tracks: [],
+        position: 0
     }
-}, { tracks: [], position: 0 })
+)
 
 message$.subscribe((message: Message) => playlistModel.publish(message))
 

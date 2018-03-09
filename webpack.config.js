@@ -3,7 +3,7 @@ module.exports = {
   entry: {
     badge: './src/badge.ts',
     content: './src/content.ts',
-    playlist:  './src/playlist.ts',
+    playlist: './src/playlist.ts',
     popup: './src/popup.tsx'
   },
   output: {
@@ -30,5 +30,11 @@ module.exports = {
       { test: /\.tsx?$/, loader: 'ts-loader' },
       { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
     ]
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: 'common'
+    }
   }
 }

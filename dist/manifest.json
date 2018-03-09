@@ -6,9 +6,9 @@
   "description": "An audio streaming extension that seeks for links to music and recordings on the sites you visit.",
   "background": {
     "scripts": [
-      "./js/common.js",
-      "./js/badge.bundle.js",
-      "./js/playlist.bundle.js"
+      "./js/common.bundle.js",
+      "./js/playlist.bundle.js",
+      "./js/badge.bundle.js"
     ]
   },
   "browser_action": {
@@ -48,6 +48,7 @@
         "<all_urls>"
       ],
       "js": [
+        "./js/common.bundle.js",
         "./js/content.bundle.js"
       ]
     }

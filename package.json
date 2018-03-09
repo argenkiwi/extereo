@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js --optimize-minimize",
-    "watch": "webpack --config webpack.config.js --watch"
+    "build": "webpack --mode=production",
+    "watch": "webpack --watch --mode=development"
   },
   "repository": {
     "type": "git",

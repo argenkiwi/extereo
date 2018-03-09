@@ -4,7 +4,7 @@ import Message from '../model/Message';
 
 declare module BaseComponent {
     export interface Props {
-        message$: Observable<Message<any>>
+        message$: Observable<Message>
     }
 }
 

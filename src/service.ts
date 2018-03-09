@@ -73,7 +73,7 @@ export function scan(callback: (response: Track[]) => void) {
         active: true,
         currentWindow: true
     }, tabs => tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {
-        type: Message.Kind.Scan
+        kind: Message.Kind.Scan
     }, callback)))
 }
 

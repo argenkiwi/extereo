@@ -42,12 +42,12 @@ class Playlist extends BaseComponent<Props, State> {
 
         this.subscriptions.push(message$
             .filter((message: Message) => message.kind == Message.Kind.Player)
-            .map(message => message.playerState)
+            .map((message: Message.Player) => message.playerState)
             .subscribe(playerState => this.setState({ playerState })));
 
         this.subscriptions.push(message$
             .filter((message: Message) => message.kind == Message.Kind.Playlist)
-            .map(message => message.playlistState)
+            .map((message: Message.Playlist) => message.playlistState)
             .subscribe(playlistState => this.setState({ playlistState })));
 
         ping();

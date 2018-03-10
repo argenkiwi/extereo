@@ -9,6 +9,10 @@ type PlayerEvent =
     } | {
         kind: PlayerEvent.Kind.TimeUpdate,
         time: number
+    } | {
+        kind: PlayerEvent.Kind.Ended
+    } | {
+        kind: PlayerEvent.Kind.Error
     }
 
 namespace PlayerEvent {
@@ -16,7 +20,9 @@ namespace PlayerEvent {
         Play,
         Pause,
         DurationChange,
-        TimeUpdate
+        TimeUpdate,
+        Ended,
+        Error
     }
 }
 

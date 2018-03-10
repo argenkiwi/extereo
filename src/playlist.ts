@@ -7,6 +7,8 @@ import PlayerState from './model/PlayerState'
 import PlaylistState from './model/PlaylistState'
 import { player as reportPlayerState, playlist as reportPlaylistState } from './service'
 import StateEventModel from './core/StateEventModel'
+import AudioPlayer from './player/AudioPlayer';
+import Player from './player/Player';
 
 const message$ = Observable.fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
@@ -55,47 +57,27 @@ const playerModel = new StateEventModel<PlayerState, PlayerEvent>(
 
 playerModel.stateObservable.subscribe(reportPlayerState)
 
-const audio = document.createElement('audio')
+const player: Player = new AudioPlayer()
 
-Observable.fromEvent(audio, 'play')
-    .subscribe(_ => playerModel.publish({
-        kind: PlayerEvent.Kind.Play
-    }))
-
-Observable.fromEvent(audio, 'pause')
-    .subscribe(_ => playerModel.publish({
-        kind: PlayerEvent.Kind.Pause
-    }))
-
-Observable.fromEvent(audio, 'durationchange')
-    .subscribe(_ => playerModel.publish({
-        kind: PlayerEvent.Kind.DurationChange,
-        duration: audio.duration
-    }))
-
-Observable.fromEvent(audio, 'timeupdate').debounce(() => Observable.timer(100))
-    .subscribe(_ => playerModel.publish({
-        kind: PlayerEvent.Kind.TimeUpdate,
-        time: audio.currentTime
-    }))
+player.event$.subscribe(event => playerModel.publish(event))
 
 message$.subscribe(message => {
     switch (message.kind) {
         case Message.Kind.Play:
-            audio.play()
+            player.play()
             break
         case Message.Kind.Pause:
-            audio.pause()
+            player.pause()
             break
         case Message.Kind.Seek:
-            audio.currentTime = message.time
+            player.seek(message.time)
             break
     }
 })
 
 command$
     .filter(command => command === 'play-pause')
-    .subscribe(_ => audio.paused ? audio.play() : audio.pause())
+    .subscribe(_ => player.toggle())
 
 message$
     .filter((message: Message) => message.kind == Message.Kind.Ping)
@@ -152,23 +134,12 @@ command$.filter(command => command === 'prev-track')
     .subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
 
 command$.filter(command => command === 'next-track')
-    .merge(Observable.fromEvent(audio, 'ended'))
-    .merge(Observable.fromEvent(audio, 'error'))
+    .merge(player.event$.filter(event => event.kind == PlayerEvent.Kind.Ended))
+    .merge(player.event$.filter(event => event.kind == PlayerEvent.Kind.Error))
     .subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))
 
 playlistModel.stateObservable
     .map((state: PlaylistState) => state.position < state.tracks.length ? state.tracks[state.position] : null)
-    .subscribe(track => {
-        if (track) {
-            if (track.href === audio.src) return;
-            audio.src = track.href;
-            audio.title = track.title;
-            audio.load();
-            audio.play();
-        } else {
-            audio.pause();
-            audio.src = '';
-        }
-    })
+    .subscribe(track => player.load(track))
 
 playlistModel.stateObservable.subscribe(reportPlaylistState)

@@ -4,12 +4,14 @@
   "version": "4.0.2",
   "short_name": "Extereo",
   "description": "An audio streaming extension that seeks for links to music and recordings on the sites you visit.",
+  "author": "Leandro M. Peralta",
   "background": {
     "scripts": [
       "./js/common.bundle.js",
       "./js/playlist.bundle.js",
       "./js/badge.bundle.js"
-    ]
+    ],
+    "persistent": true
   },
   "browser_action": {
     "default_icon": {

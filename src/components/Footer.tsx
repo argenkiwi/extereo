@@ -23,10 +23,18 @@ function Footer({ tracks }: Props) {
 }
 
 function allowDownload(tracks: Track[]) {
-    chrome.permissions.request({
+    chrome.permissions.contains({
         permissions: ['downloads']
-    }, function (granted) {
-        if (granted) exportToHTML(tracks);
+    }, result => {
+        if (result) {
+            exportToHTML(tracks)
+        } else {
+            chrome.permissions.request({
+                permissions: ['downloads']
+            }, function (granted) {
+                if (granted) exportToHTML(tracks)
+            });
+        }
     });
 }
 

@@ -31,7 +31,7 @@ function allowDownload(tracks: Track[]) {
         } else {
             chrome.permissions.request({
                 permissions: ['downloads']
-            }, function (granted) {
+            }, granted => {
                 if (granted) exportToHTML(tracks)
             });
         }

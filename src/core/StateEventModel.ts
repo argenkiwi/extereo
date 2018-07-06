@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs'
+import { scan } from 'rxjs/operators'
 import EventModel from './EventModel'
 
 class StateEventModel<S, E> extends EventModel<E> {
@@ -7,7 +8,8 @@ class StateEventModel<S, E> extends EventModel<E> {
 
     constructor(reducer: (state: S, event: E) => S, initialState: S) {
         super()
-        this.stateObservable = this.eventObservable.scan(reducer, initialState)
+        this.stateObservable = this.eventObservable
+            .pipe(scan(reducer, initialState))
     }
 }
 

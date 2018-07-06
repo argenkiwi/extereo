@@ -1,7 +1,6 @@
-import { Observable, Subject } from 'rxjs'
+import { fromEventPattern, merge } from 'rxjs'
 import { arrayMove } from 'react-sortable-hoc'
 import Message from './model/Message'
-import Track from './model/Track'
 import PlayerEvent from './model/PlayerEvent'
 import PlayerState from './model/PlayerState'
 import PlaylistState from './model/PlaylistState'
@@ -9,14 +8,15 @@ import { player as reportPlayerState, playlist as reportPlaylistState } from './
 import StateEventModel from './core/StateEventModel'
 import AudioPlayer from './player/AudioPlayer';
 import Player from './player/Player';
+import { filter, map } from 'rxjs/operators';
 
-const message$ = Observable.fromEventPattern((h: (message: Message) => void) => {
+const message$ = fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
 }, (h: (message: Message) => void) => {
     chrome.runtime.onMessage.removeListener(h);
 }, (message: Message) => message)
 
-const command$ = Observable.fromEventPattern((h: (command: string) => void) => {
+const command$ = fromEventPattern((h: (command: string) => void) => {
     chrome.commands.onCommand.addListener(h);
 }, (h: (command: string) => void) => {
     chrome.commands.onCommand.removeListener(h);
@@ -75,13 +75,13 @@ message$.subscribe(message => {
     }
 })
 
-command$
-    .filter(command => command === 'play-pause')
-    .subscribe(_ => player.toggle())
+command$.pipe(
+    filter(command => command === 'play-pause')
+).subscribe(_ => player.toggle())
 
-message$
-    .filter((message: Message) => message.kind == Message.Kind.Ping)
-    .subscribe(message => playerModel.publish({ kind: null }))
+message$.pipe(
+    filter((message: Message) => message.kind == Message.Kind.Ping)
+).subscribe(() => playerModel.publish({ kind: null }))
 
 const playlistModel = new StateEventModel<PlaylistState, Message>(
     (state, message) => {
@@ -130,16 +130,20 @@ const playlistModel = new StateEventModel<PlaylistState, Message>(
 
 message$.subscribe((message: Message) => playlistModel.publish(message))
 
-command$.filter(command => command === 'prev-track')
-    .subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
+command$.pipe(
+    filter(command => command === 'prev-track')
+).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
 
-command$.filter(command => command === 'next-track')
-    .merge(player.event$.filter(event => event.kind == PlayerEvent.Kind.Ended))
-    .merge(player.event$.filter(event => event.kind == PlayerEvent.Kind.Error))
-    .subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))
+merge(
+    filter(command => command === 'next-track'),
+    player.event$.pipe(filter(event => event.kind == PlayerEvent.Kind.Ended)),
+    player.event$.pipe(filter(event => event.kind == PlayerEvent.Kind.Error))
+).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))
 
-playlistModel.stateObservable
-    .map((state: PlaylistState) => state.position < state.tracks.length ? state.tracks[state.position] : null)
-    .subscribe(track => player.load(track))
+playlistModel.stateObservable.pipe(
+    map((state: PlaylistState) => state.position < state.tracks.length
+        ? state.tracks[state.position]
+        : null)
+).subscribe(track => player.load(track))
 
 playlistModel.stateObservable.subscribe(reportPlaylistState)

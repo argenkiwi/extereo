@@ -9,7 +9,11 @@ import './PopUp.css';
 
 interface Props extends React.HTMLProps<HTMLDivElement>, BaseComponent.Props { }
 
-class PopUp extends BaseComponent<Props, { tracks: Track[] }>{
+interface State {
+    tracks: Track[]
+}
+
+class PopUp extends BaseComponent<Props, State>{
 
     constructor(props: Props) {
         super(props);

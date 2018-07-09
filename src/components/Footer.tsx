@@ -3,24 +3,17 @@ import Track from '../model/Track';
 import { clear } from '../service';
 import './Footer.css';
 
-interface Props extends React.HTMLProps<HTMLDivElement> {
-    tracks: Track[];
-}
-
-function Footer({ tracks }: Props) {
-    return (
-        <div className="Footer">
-            <button
-                disabled={!tracks.length}
-                onClick={() => allowDownload(tracks)}
-            >Export</button>
-            <button
-                disabled={!tracks.length}
-                onClick={() => clear()}
-            >Clear</button>
-        </div>
-    );
-}
+const Footer = ({ tracks }: { tracks: Track[] }) =>
+    <div className="Footer">
+        <button
+            disabled={!tracks.length}
+            onClick={() => allowDownload(tracks)}
+        >Export</button>
+        <button
+            disabled={!tracks.length}
+            onClick={() => clear()}
+        >Clear</button>
+    </div>
 
 function allowDownload(tracks: Track[]) {
     chrome.permissions.contains({
@@ -62,4 +55,4 @@ function exportToHTML(tracks: Track[]) {
     });
 }
 
-export default Footer;
+export default Footer

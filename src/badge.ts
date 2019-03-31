@@ -1,4 +1,3 @@
-import Message from './model/Message';
 import Track from './model/Track';
 import { scan } from './service';
 

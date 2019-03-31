@@ -1,5 +1,6 @@
-import { fromEventPattern, merge } from 'rxjs'
 import { arrayMove } from 'react-sortable-hoc'
+import { merge, fromEventPattern } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import Message from './model/Message'
 import PlayerEvent from './model/PlayerEvent'
 import PlayerState from './model/PlayerState'
@@ -8,7 +9,7 @@ import { player as reportPlayerState, playlist as reportPlaylistState } from './
 import StateEventModel from './core/StateEventModel'
 import AudioPlayer from './player/AudioPlayer';
 import Player from './player/Player';
-import { filter, map } from 'rxjs/operators';
+import Track from './model/Track';
 
 const message$ = fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
@@ -76,7 +77,7 @@ message$.subscribe(message => {
 })
 
 command$.pipe(
-    filter(command => command === 'play-pause')
+    filter((command: String) => command === 'play-pause')
 ).subscribe(_ => player.toggle())
 
 message$.pipe(
@@ -131,19 +132,19 @@ const playlistModel = new StateEventModel<PlaylistState, Message>(
 message$.subscribe((message: Message) => playlistModel.publish(message))
 
 command$.pipe(
-    filter(command => command === 'prev-track')
+    filter((command: String) => command === 'prev-track')
 ).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
 
 merge(
-    filter(command => command === 'next-track'),
-    player.event$.pipe(filter(event => event.kind == PlayerEvent.Kind.Ended)),
-    player.event$.pipe(filter(event => event.kind == PlayerEvent.Kind.Error))
+    filter((command: String) => command === 'next-track'),
+    player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Ended)),
+    player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Error))
 ).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))
 
 playlistModel.stateObservable.pipe(
     map((state: PlaylistState) => state.position < state.tracks.length
         ? state.tracks[state.position]
         : null)
-).subscribe(track => player.load(track))
+).subscribe((track: Track) => player.load(track))
 
 playlistModel.stateObservable.subscribe(reportPlaylistState)

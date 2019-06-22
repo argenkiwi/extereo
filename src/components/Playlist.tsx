@@ -39,24 +39,20 @@ class Playlist extends BaseComponent<Props, State> {
     componentDidMount() {
         const { message$ } = this.props;
 
-        this.subscriptions.push(message$.pipe(
-            filter((message: Message) => message.kind == Message.Kind.Player)
-        ).pipe(
-            map((message: Message.Player) => message.playerState)
-        ).subscribe(playerState => this.setState({ playerState })));
+        this.subscriptions.push(message$
+            .pipe(filter((message: Message) => message.kind == Message.Kind.Player))
+            .pipe(map((message: Message.Player) => message.playerState))
+            .subscribe(playerState => this.setState({ playerState })));
 
-        this.subscriptions.push(message$.pipe(
-            filter((message: Message) => message.kind == Message.Kind.Playlist)
-        ).pipe(
-            map((message: Message.Playlist) => message.playlistState)
-        ).subscribe(playlistState => this.setState({ playlistState })));
+        this.subscriptions.push(message$
+            .pipe(filter((message: Message) => message.kind == Message.Kind.Playlist))
+            .pipe(map((message: Message.Playlist) => message.playlistState))
+            .subscribe(playlistState => this.setState({ playlistState })));
 
         ping();
     }
 
-    onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
-        sort(oldIndex, newIndex);
-    }
+    onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => sort(oldIndex, newIndex)
 
     render() {
         const { playerState, playlistState } = this.state;

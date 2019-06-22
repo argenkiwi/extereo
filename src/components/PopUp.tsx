@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { scan } from '../service';
-import Message from '../model/Message';
 import Track from '../model/Track';
 import BaseComponent from './BaseComponent';
 import Found from './Found';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Track from '../model/Track';
 import { add } from '../service';
-import { regexM3U, regexExt } from '../filters';
 import './FoundItem.css';
 
 interface Props extends React.HTMLProps<HTMLLIElement> {

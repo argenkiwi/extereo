@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+
 module.exports = {
   entry: {
     badge: './src/badge.ts',

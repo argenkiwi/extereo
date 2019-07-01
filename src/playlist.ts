@@ -136,7 +136,7 @@ command$.pipe(
 ).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
 
 merge(
-    filter((command: String) => command === 'next-track'),
+    command$.pipe(filter((command: String) => command === 'next-track')),
     player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Ended)),
     player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Error))
 ).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))

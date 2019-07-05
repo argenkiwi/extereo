@@ -3,42 +3,56 @@ import Track from '../model/Track';
 import { clear } from '../service';
 import './Footer.css';
 
-interface Props extends React.HTMLProps<HTMLDivElement> {
-    tracks: Track[];
-}
+const Footer = ({ tracks }: { tracks: Track[] }) =>
+    <div className="Footer">
+        <button
+            disabled={!tracks.length}
+            onClick={() => allowDownload(tracks)}
+        >Export</button>
+        <button
+            disabled={!tracks.length}
+            onClick={() => clear()}
+        >Clear</button>
+    </div>
 
-function Footer({ tracks }: Props) {
-    return (
-        <div className="Footer">
-            <button
-                disabled={!tracks.length}
-                onClick={() => allowExportToM3U(tracks)}
-            >Export</button>
-            <button
-                disabled={!tracks.length}
-                onClick={() => clear()}
-            >Clear</button>
-        </div>
-    );
-}
-
-function allowExportToM3U(tracks: Track[]) {
-    chrome.permissions.request({
+function allowDownload(tracks: Track[]) {
+    chrome.permissions.contains({
         permissions: ['downloads']
-    }, function (granted) {
-        if (granted) exportToM3U(tracks);
+    }, result => {
+        if (result) {
+            exportToHTML(tracks)
+        } else {
+            chrome.permissions.request({
+                permissions: ['downloads']
+            }, granted => {
+                if (granted) exportToHTML(tracks)
+            });
+        }
     });
 }
 
-function exportToM3U(tracks: Track[]) {
-    const urls = tracks.map(track => track.href).join('\n');
-    const blob = new Blob([urls], {
-        type: 'application/x-mpegurl'
+function exportToHTML(tracks: Track[]) {
+    const html = document.implementation.createHTMLDocument('Extereo Playlist');
+    const ul = html.createElement('ol');
+    tracks.forEach(track => {
+        const li = html.createElement('li');
+        const a = html.createElement('a');
+        a.href = track.href;
+        a.innerText = track.title;
+        li.appendChild(a);
+        ul.appendChild(li);
     });
+    html.body.appendChild(ul);
+
+    const blob = new Blob(['<!doctype html>', html.documentElement.outerHTML], {
+        type: 'text/html'
+    });
+
     chrome.downloads.download({
-        url: window.URL.createObjectURL(blob),
-        filename: 'playlist.m3u'
+        url: URL.createObjectURL(blob),
+        filename: 'playlist.html',
+        saveAs: true
     });
 }
 
-export default Footer;
+export default Footer

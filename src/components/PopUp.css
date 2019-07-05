@@ -1,0 +1,5 @@
+.PopUp {
+    display: grid;
+    grid-gap: .8em;
+    grid-template-rows: 320px;
+}

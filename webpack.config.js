@@ -1,41 +1,40 @@
 const webpack = require('webpack');
+
 module.exports = {
   entry: {
-    badge: __dirname + "/src/badge.ts",
-    content: __dirname + "/src/content.ts",
-    playlist: __dirname + "/src/playlist.ts",
-    popup: __dirname + "/src/popup.tsx"
+    badge: './src/badge.ts',
+    content: './src/content.ts',
+    playlist: './src/playlist.ts',
+    popup: './src/popup.tsx'
   },
   output: {
     path: __dirname + '/dist/js',
     filename: '[name].bundle.js'
   },
-  devtool: "source-map",
+  devtool: 'source-map',
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"]
+    extensions: ['.ts', '.tsx', '.js', '.json']
   },
   module: {
     rules: [
       {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff&name=../fonts/[hash].[ext]"
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=../fonts/[hash].[ext]'
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "file-loader?name=../fonts/[hash].[ext]"
+        loader: 'file-loader?name=../fonts/[hash].[ext]'
       }, {
         test: /\.css$/,
-        loader: "style-loader!css-loader"
+        loader: 'style-loader!css-loader'
       },
-      { test: /\.tsx?$/, loader: "ts-loader" },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+      { test: /\.tsx?$/, loader: 'ts-loader' },
+      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
     ]
   },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "common",
-      filename: "common.js",
-      chunks: ["playlist", "popup"]
-    })
-  ]
-};
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
+}

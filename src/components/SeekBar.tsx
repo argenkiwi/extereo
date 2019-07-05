@@ -1,8 +1,4 @@
 import * as React from 'react';
-import { Component } from "react";
-import { Subject, Observable } from "rxjs";
-import PlayerState from '../model/PlayerState';
-import { seek } from '../service';
 import './SeekBar.css';
 
 interface Props {
@@ -39,7 +35,7 @@ class SeekBar extends React.Component<Props, State> {
     render() {
         const precision = 1000;
         const { onSeek, onSeeking } = this.props;
-        const { duration, elapsed, seeking } = this.state;
+        const { duration, elapsed } = this.state;
 
         const onMouseDown = () => this.setState({
             seeking: true,
@@ -82,4 +78,4 @@ function format(seconds: number) {
     return new Date(seconds * 1000).toISOString().substr(11, 8);
 }
 
-export default SeekBar;
+export default SeekBar

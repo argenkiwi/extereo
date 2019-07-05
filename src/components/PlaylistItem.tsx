@@ -4,11 +4,15 @@ import Track from '../model/Track';
 import FoundItem from './FoundItem';
 import './PlaylistItem.css';
 
-interface Props extends React.HTMLProps<HTMLOListElement> {
+interface Props {
     track: Track;
 }
 
-class PlaylistItem extends React.Component<Props, { tracks: Track[] }>{
+interface State {
+    tracks: Track[]
+}
+
+class PlaylistItem extends React.Component<Props, State>{
     constructor(props: Props) {
         super(props);
         this.state = {

@@ -25,26 +25,26 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/soflete/extereo-audio-player#readme",
   "devDependencies": {
-    "@types/chrome": "^0.0.86",
-    "@types/react": "^16.8.10",
-    "@types/react-dom": "^16.8.3",
+    "@types/chrome": "^0.0.88",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
     "@types/react-sortable-hoc": "^0.6.5",
-    "css-loader": "^3.0.0",
-    "file-loader": "^4.0.0",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
     "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.1",
+    "style-loader": "^1.0.0",
     "ts-loader": "^6.0.4",
-    "typescript": "^3.4.1",
-    "url-loader": "^2.0.1",
-    "web-ext": "^3.1.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "typescript": "^3.6.2",
+    "url-loader": "^2.1.0",
+    "web-ext": "^3.1.1",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8"
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-sortable-hoc": "^1.8.3",
-    "rxjs": "^6.4.0"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-sortable-hoc": "^1.10.1",
+    "rxjs": "^6.5.3"
   }
 }

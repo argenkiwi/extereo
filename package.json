@@ -1,6 +1,6 @@
 {
   "name": "extereo",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "A Chrome Extension to stream audio directly from the sites you visit.",
   "main": "index.js",
   "scripts": {
@@ -26,25 +26,25 @@
   "homepage": "https://bitbucket.org/soflete/extereo-audio-player#readme",
   "devDependencies": {
     "@types/chrome": "^0.0.88",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
     "@types/react-sortable-hoc": "^0.6.6",
     "css-loader": "^3.4.2",
     "file-loader": "^4.3.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.1.3",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.7.5",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
     "url-loader": "^2.3.0",
     "web-ext": "^3.2.1",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.10"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-sortable-hoc": "^1.11.0",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.5"
   }
 }

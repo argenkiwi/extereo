@@ -23,38 +23,36 @@ const command$ = fromEventPattern((h: (command: string) => void) => {
     chrome.commands.onCommand.removeListener(h);
 }, (command: string) => command)
 
-const playerModel = new StateEventModel<PlayerState, PlayerEvent>(
-    (state, event) => {
-        switch (event.kind) {
-            case PlayerEvent.Kind.Play:
-                return {
-                    ...state,
-                    paused: false
-                }
-            case PlayerEvent.Kind.Pause:
-                return {
-                    ...state,
-                    paused: true
-                }
-            case PlayerEvent.Kind.DurationChange:
-                return {
-                    ...state,
-                    duration: event.duration
-                }
-            case PlayerEvent.Kind.TimeUpdate:
-                return {
-                    ...state,
-                    elapsed: event.time
-                }
-            default:
-                return state;
-        }
-    }, {
-        duration: 0,
-        elapsed: 0,
-        paused: true
+const playerModel = new StateEventModel<PlayerState, PlayerEvent>((state, event) => {
+    switch (event.kind) {
+        case PlayerEvent.Kind.Play:
+            return {
+                ...state,
+                paused: false
+            }
+        case PlayerEvent.Kind.Pause:
+            return {
+                ...state,
+                paused: true
+            }
+        case PlayerEvent.Kind.DurationChange:
+            return {
+                ...state,
+                duration: event.duration
+            }
+        case PlayerEvent.Kind.TimeUpdate:
+            return {
+                ...state,
+                elapsed: event.time
+            }
+        default:
+            return state;
     }
-)
+}, {
+    duration: 0,
+    elapsed: 0,
+    paused: true
+})
 
 playerModel.stateObservable.subscribe(reportPlayerState)
 
@@ -84,50 +82,48 @@ message$.pipe(
     filter((message: Message) => message.kind == Message.Kind.Ping)
 ).subscribe(() => playerModel.publish({ kind: null }))
 
-const playlistModel = new StateEventModel<PlaylistState, Message>(
-    (state, message) => {
-        switch (message.kind) {
-            case Message.Kind.Add:
-                return { ...state, tracks: state.tracks.concat(message.tracks) }
-            case Message.Kind.Clear:
-                return { ...state, tracks: [], position: 0 }
-            case Message.Kind.Jump:
-                return { ...state, position: message.position }
-            case Message.Kind.Previous:
-                return state.position > 0 ? { ...state, position: state.position - 1 } : state
-            case Message.Kind.Next:
-                return state.position < state.tracks.length ? {
-                    ...state,
-                    position: state.position + 1
-                } : state
-            case Message.Kind.Remove:
-                return {
-                    ...state,
-                    position: message.position < state.position ? state.position - 1 : state.position,
-                    tracks: state.tracks
-                        .slice(0, message.position)
-                        .concat(state.tracks.slice(message.position + 1))
-                }
-            case Message.Kind.Sort:
-                const { position, tracks } = state
-                const { from, to } = message
-                return {
-                    ...state,
-                    position: position < from && position >= to ? position + 1 : (
-                        position > from && position <= to ? position - 1 : (
-                            position === from ? to : position
-                        )
-                    ),
-                    tracks: arrayMove(Array.from(tracks), from, to)
-                }
-            default:
-                return state;
-        }
-    }, {
-        tracks: [],
-        position: 0
+const playlistModel = new StateEventModel<PlaylistState, Message>((state, message) => {
+    switch (message.kind) {
+        case Message.Kind.Add:
+            return { ...state, tracks: state.tracks.concat(message.tracks) }
+        case Message.Kind.Clear:
+            return { ...state, tracks: [], position: 0 }
+        case Message.Kind.Jump:
+            return { ...state, position: message.position }
+        case Message.Kind.Previous:
+            return state.position > 0 ? { ...state, position: state.position - 1 } : state
+        case Message.Kind.Next:
+            return state.position < state.tracks.length ? {
+                ...state,
+                position: state.position + 1
+            } : state
+        case Message.Kind.Remove:
+            return {
+                ...state,
+                position: message.position < state.position ? state.position - 1 : state.position,
+                tracks: state.tracks
+                    .slice(0, message.position)
+                    .concat(state.tracks.slice(message.position + 1))
+            }
+        case Message.Kind.Sort:
+            const { position, tracks } = state
+            const { from, to } = message
+            return {
+                ...state,
+                position: position < from && position >= to ? position + 1 : (
+                    position > from && position <= to ? position - 1 : (
+                        position === from ? to : position
+                    )
+                ),
+                tracks: arrayMove(Array.from(tracks), from, to)
+            }
+        default:
+            return state;
     }
-)
+}, {
+    tracks: [],
+    position: 0
+})
 
 message$.subscribe((message: Message) => playlistModel.publish(message))
 

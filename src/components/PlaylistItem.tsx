@@ -8,19 +8,10 @@ interface Props {
     track: Track;
 }
 
-interface State {
-    tracks: Track[]
-}
+const PlaylistItem = ({ track }: Props) => {
+    const [tracks, setTracks] = React.useState([])
 
-class PlaylistItem extends React.Component<Props, State>{
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            tracks: []
-        };
-    }
-
-    load = (uri: string) => {
+    function load(uri: string) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", uri);
         xhr.overrideMimeType("audio/x-mpegurl");
@@ -34,30 +25,26 @@ class PlaylistItem extends React.Component<Props, State>{
                     title: decodeURIComponent(line.substring(line.lastIndexOf('/') + 1))
                 }));
 
-            this.setState({ tracks });
+            setTracks(tracks)
         };
         xhr.onerror = () => console.log(xhr.response);
         xhr.send();
     }
 
-    render() {
-        const { track } = this.props;
-        const { tracks } = this.state;
-        return (
-            <ol className="PlaylistItem">
-                <li key={track.href}>
-                    <span>{track.title}</span>
-                    {tracks.length > 0 ?
-                        <button onClick={() => add(...tracks)}>Add All</button> :
-                        <button onClick={() => this.load(track.href)}>Load</button>
-                    }
-                </li>
-                {tracks.length > 0 && tracks.map(track =>
-                    <FoundItem key={track.href} track={track} />
-                )}
-            </ol>
-        );
-    }
+    return (
+        <ol className="PlaylistItem">
+            <li key={track.href}>
+                <span>{track.title}</span>
+                {tracks.length > 0 ?
+                    <button onClick={() => add(...tracks)}>Add All</button> :
+                    <button onClick={() => load(track.href)}>Load</button>
+                }
+            </li>
+            {tracks.length > 0 && tracks.map(track =>
+                <FoundItem key={track.href} track={track} />
+            )}
+        </ol>
+    )
 }
 
 export default PlaylistItem;

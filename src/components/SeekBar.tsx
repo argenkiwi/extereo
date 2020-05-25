@@ -1,18 +1,11 @@
 import * as React from 'react';
 import './SeekBar.css';
-import StateEventModel from '../core/StateEventModel';
 
 interface Props {
     duration: number;
     elapsed: number;
     onSeek?: (time: number) => void;
     onSeeking?: (time: number) => void;
-}
-
-interface State {
-    duration: number;
-    elapsed: number;
-    seeking: boolean;
 }
 
 const SeekBar = (props: Props) => {

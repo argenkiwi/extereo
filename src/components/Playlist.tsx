@@ -29,7 +29,7 @@ const Playlist = ({ message$ }: Props) => {
             .subscribe(setPlayerState)
 
         return () => { subscription.unsubscribe() }
-    }, [message$])
+    }, [message$, setPlayerState])
 
     const [playlistState, setPlaylistState] = React.useState({
         position: 0,
@@ -43,9 +43,9 @@ const Playlist = ({ message$ }: Props) => {
             .subscribe(setPlaylistState)
 
         return () => { subscription.unsubscribe() }
-    }, [message$])
+    }, [message$, setPlaylistState])
 
-    React.useEffect(() => { ping() }, [message$])
+    React.useEffect(() => { ping() }, [])
 
     return (
         <div className="Playlist">

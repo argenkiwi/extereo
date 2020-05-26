@@ -3,7 +3,7 @@ import Track from '../model/Track';
 import { clear } from '../service';
 import './Footer.css';
 
-const Footer = ({ tracks }: { tracks: Track[] }) =>
+const Footer = ({ tracks }: { tracks: Track[] }) => (
     <div className="Footer">
         <button
             disabled={!tracks.length}
@@ -14,6 +14,7 @@ const Footer = ({ tracks }: { tracks: Track[] }) =>
             onClick={() => clear()}
         >Clear</button>
     </div>
+)
 
 function allowDownload(tracks: Track[]) {
     chrome.permissions.contains({

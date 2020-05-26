@@ -12,7 +12,7 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
 
 const Handle = SortableHandle(() => <span className="Handle" />);
 
-const TrackListItem = ({ playing, track, position }: Props) =>
+const TrackListItem = ({ playing, track, position }: Props) => (
     <li className="TrackListItem">
         <a href={track.href} target="_blank">
             {playing ?
@@ -28,5 +28,6 @@ const TrackListItem = ({ playing, track, position }: Props) =>
         </button>
         <Handle />
     </li>
+)
 
 export default SortableElement<Props>(TrackListItem);

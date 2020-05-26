@@ -9,7 +9,7 @@ interface Props {
     position: number
 }
 
-const TrackList = ({ tracks, position }: Props) =>
+const TrackList = ({ tracks, position }: Props) => (
     <ol className="TrackList">
         {tracks.map((track, i) =>
             <TrackListItem
@@ -20,5 +20,6 @@ const TrackList = ({ tracks, position }: Props) =>
                 track={track} />
         )}
     </ol>
+)
 
 export default SortableContainer<Props>(TrackList)

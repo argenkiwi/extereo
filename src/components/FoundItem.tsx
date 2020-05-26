@@ -7,15 +7,13 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
     track: Track;
 }
 
-function FoundItem({ track }: Props) {
-    return (
-        <li className="FoundItem">
-            <a href={track.href} target="_blank">{track.title}</a>
-            <button onClick={() => add(track)}>
-                <i className="icon-plus-circled"></i>
-            </button>
-        </li>
-    );
-}
+const FoundItem = ({ track }: Props) => (
+    <li className="FoundItem">
+        <a href={track.href} target="_blank">{track.title}</a>
+        <button onClick={() => add(track)}>
+            <i className="icon-plus-circled"></i>
+        </button>
+    </li>
+)
 
 export default FoundItem;

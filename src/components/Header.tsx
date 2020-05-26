@@ -2,7 +2,7 @@ import * as React from 'react';
 import { previous, next, play, pause } from '../service';
 import './Header.css';
 
-const Header = ({ paused }: { paused: boolean }) =>
+const Header = ({ paused }: { paused: boolean }) => (
     <div className="Header">
         <strong>PLAYLIST</strong>
         <button onClick={() => previous()}>
@@ -20,5 +20,6 @@ const Header = ({ paused }: { paused: boolean }) =>
             <i className="icon-next"></i>
         </button>
     </div>
+)
 
 export default Header

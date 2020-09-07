@@ -4,7 +4,6 @@ import Track from '../model/Track';
 import BaseComponent from './BaseComponent';
 import Found from './Found';
 import Playlist from './Playlist';
-import './PopUp.css';
 
 interface Props extends React.HTMLProps<HTMLDivElement>, BaseComponent.Props { }
 
@@ -28,11 +27,12 @@ class PopUp extends BaseComponent<Props, State>{
     render() {
         const { message$ } = this.props;
         const { tracks } = this.state;
+        const showFound = tracks && tracks.length > 0;
         return (
-            <div className="PopUp" style={{
-                gridTemplateColumns: tracks && tracks.length > 0 ? '320px 320px' : '320px'
-            }}>
-                {tracks && tracks.length > 0 &&
+            <div
+                className={`p-2 grid gap-2 ${showFound ? 'grid-cols-2' : 'grid-cols-1'}`}
+                style={{ width: showFound ? 640 : 320, height: 360, }}>
+                {showFound &&
                     <Found tracks={tracks} />
                 }
                 <Playlist message$={message$} />

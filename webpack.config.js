@@ -26,7 +26,11 @@ module.exports = {
         loader: 'file-loader?name=../fonts/[hash].[ext]'
       }, {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader',
+        ],
       },
       { test: /\.tsx?$/, loader: 'ts-loader' },
       { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }

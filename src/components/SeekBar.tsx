@@ -1,5 +1,4 @@
 import * as React from 'react';
-import './SeekBar.css';
 
 interface Props {
     duration: number;
@@ -40,8 +39,8 @@ const SeekBar = (props: Props) => {
     }
 
     return (
-        <div className="SeekBar mt-1">
-            <input
+        <div className="mt-1 p-1 bg-gray-200">
+            <input className="w-full"
                 type="range"
                 max={precision}
                 step={.2}
@@ -50,8 +49,10 @@ const SeekBar = (props: Props) => {
                 onMouseUp={onMouseUp}
                 onChange={onChange}
             />
-            <span>{format(Math.round(elapsed))}</span>
-            <span>{format(Math.round(duration) - Math.round(elapsed))}</span>
+            <div className="flex justify-between">
+                <span>{format(Math.round(elapsed))}</span>
+                <span>{format(Math.round(duration) - Math.round(elapsed))}</span>
+            </div>
         </div>
     )
 }

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { add } from '../service';
 import Track from '../model/Track';
 import FoundItem from './FoundItem';
-import './PlaylistItem.css';
 
 interface Props {
     track: Track;
@@ -32,9 +31,9 @@ const PlaylistItem = ({ track }: Props) => {
     }
 
     return (
-        <ol className="PlaylistItem list-inside my-0 p-2 bg-gray-200">
-            <li key={track.href}>
-                <span>{track.title}</span>
+        <ol className="list-inside my-0 p-2 bg-gray-200">
+            <li key={track.href} className="flex p-2 items-center">
+                <span className="flex-1">{track.title}</span>
                 {tracks.length > 0 ?
                     <button onClick={() => add(...tracks)}>Add All</button> :
                     <button onClick={() => load(track.href)}>Load</button>

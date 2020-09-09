@@ -1,6 +1,0 @@
-.PlaylistItem > :first-child {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    padding: .4em;
-    align-items: center;
-}

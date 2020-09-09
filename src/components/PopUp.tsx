@@ -19,8 +19,9 @@ const PopUp = ({ message$ }: Props) => {
 
     const showFound = tracks && tracks.length > 0
     return (
-        <div className={showFound ? 'grid gap-2 grid-cols-2' : ''} style={{
-            width: showFound ? '640px' : '320px'
+        <div className={`p-2 overflow-y-hidden ${showFound ? 'grid gap-2 grid-cols-2' : ''}`} style={{
+            width: showFound ? '640px' : '320px',
+            height: '360px'
         }}>
             {tracks && tracks.length > 0 &&
                 <Found tracks={tracks} />

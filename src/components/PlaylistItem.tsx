@@ -31,7 +31,7 @@ const PlaylistItem = ({ track }: Props) => {
     }
 
     return (
-        <ol className="list-inside my-0 p-2 bg-gray-200">
+        <ol className="list-inside bg-gray-200 mt-1 first:mt-0">
             <li key={track.href} className="flex p-2 items-center">
                 <span className="flex-1">{track.title}</span>
                 {tracks.length > 0 ?

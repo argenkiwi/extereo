@@ -47,7 +47,7 @@ const Playlist = ({ message$ }: Props) => {
     React.useEffect(() => { ping() }, [])
 
     return (
-        <div className="flex flex-col">
+        <div className="h-full flex flex-col overflow-y-auto">
             <Header paused={playerState.paused} />
             <SeekBar
                 elapsed={playerState.elapsed}

@@ -3,7 +3,6 @@ import { scan } from '../service';
 import Track from '../model/Track';
 import Found from './Found';
 import Playlist from './Playlist';
-import './PopUp.css';
 import { Observable } from 'rxjs';
 import Message from '../model/Message';
 
@@ -18,9 +17,10 @@ const PopUp = ({ message$ }: Props) => {
         scan(tracks => setTracks(tracks))
     })
 
+    const showFound = tracks && tracks.length > 0
     return (
-        <div className="PopUp" style={{
-            gridTemplateColumns: tracks && tracks.length > 0 ? '320px 320px' : '320px'
+        <div className={showFound ? 'grid gap-2 grid-cols-2' : ''} style={{
+            width: showFound ? '640px' : '320px'
         }}>
             {tracks && tracks.length > 0 &&
                 <Found tracks={tracks} />

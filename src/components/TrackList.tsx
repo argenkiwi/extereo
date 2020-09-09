@@ -10,7 +10,7 @@ interface Props {
 }
 
 const TrackList = ({ tracks, position }: Props) => (
-    <ol className="TrackList">
+    <ol className="TrackList flex-1 mt-1">
         {tracks.map((track, i) =>
             <TrackListItem
                 index={i}

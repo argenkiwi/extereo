@@ -3,7 +3,7 @@ import Track from '../model/Track';
 import { clear } from '../service';
 
 const Footer = ({ tracks }: { tracks: Track[] }) => (
-    <div className="flex justify-end">
+    <div className="flex justify-end mt-1">
         <button
             disabled={!tracks.length}
             onClick={() => allowDownload(tracks)}

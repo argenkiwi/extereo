@@ -40,7 +40,7 @@ const SeekBar = (props: Props) => {
     }
 
     return (
-        <div className="SeekBar">
+        <div className="SeekBar mt-1">
             <input
                 type="range"
                 max={precision}

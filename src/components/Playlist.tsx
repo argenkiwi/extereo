@@ -7,7 +7,6 @@ import Header from './Header';
 import SeekBar from './SeekBar';
 import TrackList from './TrackList';
 import Footer from './Footer';
-import './Playlist.css';
 import { filter, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -48,7 +47,7 @@ const Playlist = ({ message$ }: Props) => {
     React.useEffect(() => { ping() }, [])
 
     return (
-        <div className="Playlist">
+        <div className="flex flex-col">
             <Header paused={playerState.paused} />
             <SeekBar
                 elapsed={playerState.elapsed}

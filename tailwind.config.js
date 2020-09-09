@@ -5,7 +5,9 @@ module.exports = {
   theme: {
     extend: {},
   },
-  variants: {},
+  variants: {
+    display: ['group-hover']
+  },
   plugins: [],
   future: {
     removeDeprecatedGapUtilities: true,

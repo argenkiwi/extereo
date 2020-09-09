@@ -32,7 +32,7 @@ const PlaylistItem = ({ track }: Props) => {
     }
 
     return (
-        <ol className="PlaylistItem">
+        <ol className="PlaylistItem list-inside my-0 p-2 bg-gray-200">
             <li key={track.href}>
                 <span>{track.title}</span>
                 {tracks.length > 0 ?

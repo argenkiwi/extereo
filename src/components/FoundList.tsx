@@ -5,7 +5,7 @@ import FoundItem from './FoundItem';
 import './FoundList.css';
 
 const FoundList = ({ tracks }: { tracks: Track[] }) => (
-    <ol className="FoundList">
+    <ol className="FoundList list-inside my-0 p-2 bg-gray-200">
         <li>
             <span>Tracks found: {tracks.length}</span>
             <button

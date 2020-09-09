@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Track from '../model/Track';
 import { clear } from '../service';
-import './Footer.css';
 
 const Footer = ({ tracks }: { tracks: Track[] }) => (
-    <div className="Footer">
+    <div className="flex justify-end">
         <button
             disabled={!tracks.length}
             onClick={() => allowDownload(tracks)}
         >Export</button>
         <button
+            className="ml-1"
             disabled={!tracks.length}
             onClick={() => clear()}
         >Clear</button>

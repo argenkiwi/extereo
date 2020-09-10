@@ -13,16 +13,16 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
 
 const TrackListItem = ({ isCurrent, track, position }: Props) => {
 
-    const myRef = React.useRef(null)
+    const ref = React.useRef(null)
 
     useEffect(() => {
         if (isCurrent) {
-            myRef.current.scrollIntoView()
+            ref.current.scrollIntoView()
         }
     }, []);
 
     return (
-        <li ref={myRef} className="flex items-center p-1 hover:bg-gray-300 group">
+        <li ref={ref} className="flex items-center p-1 hover:bg-gray-300 group">
             <a href={track.href} target="_blank" className="flex-1 truncate">
                 {isCurrent ?
                     <strong>{track.title}</strong> :

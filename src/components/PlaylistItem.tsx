@@ -2,6 +2,7 @@ import * as React from 'react';
 import { add } from '../service';
 import Track from '../model/Track';
 import FoundItem from './FoundItem';
+import Button from './Button';
 
 interface Props {
     track: Track;
@@ -35,8 +36,8 @@ const PlaylistItem = ({ track }: Props) => {
             <li key={track.href} className="flex items-center my-1">
                 <span className="flex-1">{track.title}</span>
                 {tracks.length > 0 ?
-                    <button onClick={() => add(...tracks)}>Add All</button> :
-                    <button onClick={() => load(track.href)}>Load</button>
+                    <Button onClick={() => add(...tracks)}>Add All</Button> :
+                    <Button onClick={() => load(track.href)}>Load</Button>
                 }
             </li>
             {tracks.length > 0 && tracks.map(track =>

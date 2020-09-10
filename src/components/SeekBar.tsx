@@ -39,7 +39,7 @@ const SeekBar = (props: Props) => {
     }
 
     return (
-        <div className="mt-1 p-1 bg-gray-200">
+        <div className="mt-1 bg-gray-200 rounded p-2">
             <input className="w-full"
                 type="range"
                 max={precision}

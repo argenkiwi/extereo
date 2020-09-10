@@ -31,8 +31,8 @@ const PlaylistItem = ({ track }: Props) => {
     }
 
     return (
-        <ol className="list-inside bg-gray-200 mt-1 first:mt-0">
-            <li key={track.href} className="flex p-2 items-center">
+        <ol className="list-inside bg-gray-200 mt-1 first:mt-0 rounded p-2">
+            <li key={track.href} className="flex items-center my-1">
                 <span className="flex-1">{track.title}</span>
                 {tracks.length > 0 ?
                     <button onClick={() => add(...tracks)}>Add All</button> :

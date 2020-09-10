@@ -9,7 +9,7 @@ interface Props {
 }
 
 const TrackList = ({ tracks, position }: Props) => (
-    <ol className="flex-1 mt-1 overflow-auto list-inside p-2 bg-gray-200">
+    <ol className="flex-1 mt-1 overflow-auto list-inside bg-gray-200 rounded p-2">
         {tracks.map((track, i) =>
             <TrackListItem
                 index={i}

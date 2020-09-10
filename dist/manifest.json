@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Extereo Audio Player",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "short_name": "Extereo",
   "description": "An audio streaming extension that seeks for links to music and recordings on the sites you visit.",
   "author": "Leandro M. Peralta",

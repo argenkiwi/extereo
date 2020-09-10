@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=production",
+    "build": "NODE_ENV=production webpack -p",
     "watch": "webpack --watch --mode=development",
     "launch": "web-ext run --source-dir ./dist/",
     "package": "web-ext build --source-dir ./dist/"
@@ -25,26 +25,30 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/soflete/extereo-audio-player#readme",
   "devDependencies": {
-    "@types/chrome": "^0.0.88",
+    "@types/chrome": "^0.0.114",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
-    "@types/react-sortable-hoc": "^0.6.6",
+    "@types/react-sortable-hoc": "^0.7.1",
     "css-loader": "^3.6.0",
-    "file-loader": "^4.3.0",
+    "file-loader": "^6.0.0",
+    "postcss": "^7.0.32",
+    "postcss-loader": "^3.0.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.2.1",
-    "ts-loader": "^6.2.2",
+    "ts-loader": "^7.0.5",
     "typescript": "^3.9.7",
-    "url-loader": "^2.3.0",
+    "url-loader": "^4.1.0",
     "web-ext": "^5.0.0",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "win-node-env": "^0.4.0"
   },
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-sortable-hoc": "^1.11.0",
-    "rxjs": "^6.6.2"
+    "rxjs": "^6.6.3",
+    "tailwindcss": "^1.8.4"
   }
 }

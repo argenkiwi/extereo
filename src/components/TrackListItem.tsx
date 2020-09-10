@@ -6,17 +6,17 @@ import Handle from './Handle';
 import { useEffect } from 'react';
 
 interface Props extends React.HTMLProps<HTMLLIElement> {
-    playing: boolean;
+    isCurrent: boolean;
     track: Track;
     position: number;
 }
 
-const TrackListItem = ({ playing, track, position }: Props) => {
+const TrackListItem = ({ isCurrent, track, position }: Props) => {
 
     const myRef = React.useRef(null)
 
     useEffect(() => {
-        if (playing) {
+        if (isCurrent) {
             myRef.current.scrollIntoView()
         }
     }, []);
@@ -24,11 +24,11 @@ const TrackListItem = ({ playing, track, position }: Props) => {
     return (
         <li ref={myRef} className="flex items-center p-1 hover:bg-gray-300 group">
             <a href={track.href} target="_blank" className="flex-1 truncate">
-                {playing ?
+                {isCurrent ?
                     <strong>{track.title}</strong> :
                     <span>{track.title}</span>}
             </a>
-            <button onClick={() => jump(position)} disabled={playing} className="ml-1 hidden group-hover:inline">
+            <button onClick={() => jump(position)} disabled={isCurrent} className="ml-1 hidden group-hover:inline">
                 <i className="icon-play-circled"></i>
             </button>
             <button onClick={() => remove(position)} className="mx-1 hidden group-hover:inline">

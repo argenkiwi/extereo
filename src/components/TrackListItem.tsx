@@ -19,7 +19,7 @@ const TrackListItem = ({ isCurrent, track, position }: Props) => {
         if (isCurrent) {
             ref.current.scrollIntoView()
         }
-    }, []);
+    }, [])
 
     return (
         <li ref={ref} className="flex items-center p-1 hover:bg-gray-300 group">
@@ -36,7 +36,7 @@ const TrackListItem = ({ isCurrent, track, position }: Props) => {
             </button>
             <Handle />
         </li>
-    );
+    )
 }
 
 export default SortableElement<Props>(TrackListItem);

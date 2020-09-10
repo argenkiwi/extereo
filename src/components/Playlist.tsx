@@ -48,7 +48,10 @@ const Playlist = ({ message$ }: Props) => {
 
     return (
         <div className="h-full flex flex-col overflow-y-auto">
-            <Header paused={playerState.paused} />
+            <Header
+                paused={playerState.paused}
+                current={playlistState.position}
+                total={playlistState.tracks.length} />
             <SeekBar
                 elapsed={playerState.elapsed}
                 duration={playerState.duration}

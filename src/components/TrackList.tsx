@@ -15,7 +15,7 @@ const TrackList = ({ tracks, position }: Props) => (
                 index={i}
                 key={track.href}
                 position={i}
-                playing={position == i}
+                isCurrent={position == i}
                 track={track} />
         )}
     </ol>

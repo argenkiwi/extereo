@@ -7,7 +7,8 @@ module.exports = {
   },
   variants: {
     display: ['group-hover'],
-    margin: ['first']
+    margin: ['first'],
+    opacity: ['disabled'],
   },
   plugins: [],
   future: {

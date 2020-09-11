@@ -134,7 +134,7 @@ command$.pipe(
 merge(
     command$.pipe(filter((command: String) => command === 'next-track')),
     player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Ended)),
-    player.event$.pipe(filter((event: PlayerEvent) => event.kind == PlayerEvent.Kind.Error))
+    // TODO Skip track if fails to load.
 ).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Next }))
 
 playlistModel.stateObservable.pipe(

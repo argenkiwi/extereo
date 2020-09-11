@@ -1,5 +1,5 @@
 import { arrayMove } from 'react-sortable-hoc'
-import { merge, fromEventPattern } from 'rxjs';
+import { merge, fromEventPattern, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import Message from './model/Message'
 import PlayerEvent from './model/PlayerEvent'
@@ -11,17 +11,21 @@ import AudioPlayer from './player/AudioPlayer';
 import Player from './player/Player';
 import Track from './model/Track';
 
-const message$ = fromEventPattern((h: (message: Message) => void) => {
+const message$ = new Subject<Message>()
+
+fromEventPattern((h: (message: Message) => void) => {
     chrome.runtime.onMessage.addListener(h);
 }, (h: (message: Message) => void) => {
     chrome.runtime.onMessage.removeListener(h);
-}, (message: Message) => message)
+}, (message: Message) => message).subscribe(message$)
 
-const command$ = fromEventPattern((h: (command: string) => void) => {
+const command$ = new Subject<String>()
+
+fromEventPattern((h: (command: string) => void) => {
     chrome.commands.onCommand.addListener(h);
 }, (h: (command: string) => void) => {
     chrome.commands.onCommand.removeListener(h);
-}, (command: string) => command)
+}, (command: string) => command).subscribe(command$)
 
 const playerModel = new StateEventModel<PlayerState, PlayerEvent>((state, event) => {
     switch (event.kind) {

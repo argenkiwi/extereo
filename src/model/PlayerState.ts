@@ -1,7 +1,6 @@
 interface PlayerState {
     paused?: boolean,
-    duration?: number,
-    elapsed?: number
+    duration?: number
 }
 
 export default PlayerState;

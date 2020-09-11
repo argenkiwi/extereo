@@ -50,7 +50,6 @@ const playerModel = new StateEventModel<PlayerState, PlayerEvent>((state, event)
     }
 }, {
     duration: 0,
-    elapsed: 0,
     paused: true
 })
 
@@ -74,13 +73,13 @@ message$.subscribe(message => {
     }
 })
 
-command$.pipe(
-    filter((command: String) => command === 'play-pause')
-).subscribe(_ => player.toggle())
+command$
+    .pipe(filter(command => command === 'play-pause'))
+    .subscribe(_ => player.toggle())
 
-message$.pipe(
-    filter((message: Message) => message.kind == Message.Kind.Ping)
-).subscribe(() => playerModel.publish({ kind: null }))
+message$
+    .pipe(filter(message => message.kind == Message.Kind.Ping))
+    .subscribe(() => playerModel.publish({ kind: null }))
 
 const playlistModel = new StateEventModel<PlaylistState, Message>((state, message) => {
     switch (message.kind) {
@@ -127,9 +126,9 @@ const playlistModel = new StateEventModel<PlaylistState, Message>((state, messag
 
 message$.subscribe((message: Message) => playlistModel.publish(message))
 
-command$.pipe(
-    filter((command: String) => command === 'prev-track')
-).subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
+command$
+    .pipe(filter((command: String) => command === 'prev-track'))
+    .subscribe(_ => playlistModel.publish({ kind: Message.Kind.Previous }))
 
 merge(
     command$.pipe(filter((command: String) => command === 'next-track')),

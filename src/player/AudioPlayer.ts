@@ -1,5 +1,5 @@
-import { fromEvent, Observable, merge, timer, Subject } from 'rxjs';
-import { map, debounce } from 'rxjs/operators';
+import { fromEvent, merge, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import PlayerEvent from '../model/PlayerEvent';
 import Track from '../model/Track';
 import Player from './Player';

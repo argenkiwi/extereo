@@ -1,7 +1,7 @@
 import Message from './model/Message'
-import Track from './model/Track'
 import PlayerState from './model/PlayerState'
 import PlaylistState from './model/PlaylistState'
+import Track from './model/Track'
 
 export function add(...tracks: Track[]) {
     send({

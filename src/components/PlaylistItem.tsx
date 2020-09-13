@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { add } from '../service';
 import Track from '../model/Track';
-import FoundItem from './FoundItem';
+import { add } from '../service';
 import Button from './Button';
+import FoundItem from './FoundItem';
 
 interface Props {
     track: Track;

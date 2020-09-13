@@ -44,7 +44,7 @@ const SeekBar = (props: Props) => {
                 type="range"
                 max={precision}
                 step={.2}
-                value={elapsed * precision / duration}
+                value={duration > 0 ? elapsed * precision / duration : 0}
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
                 onChange={onChange}

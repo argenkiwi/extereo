@@ -17,18 +17,23 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
 const Playlist = ({ message$ }: Props) => {
     const [playerState, setPlayerState] = React.useState({
         duration: 0,
-        elapsed: 0,
         paused: true
     } as PlayerState)
 
+    const [elapsed, setElapsed] = React.useState(0)
+
     React.useEffect(() => {
         const subscription = message$
-            .pipe(filter((message: Message) => message.kind == Message.Kind.Player))
-            .pipe(map((message: Message.Player) => message.playerState))
+            .pipe(
+                filter(message => message.kind == Message.Kind.Player),
+                map((message: Message.Player) => message.playerState)
+            )
             .subscribe(setPlayerState)
 
         return () => { subscription.unsubscribe() }
     }, [message$, setPlayerState])
+
+    React.useEffect(() => chrome.runtime.connect({ name: "timeupdate" }).onMessage.addListener(setElapsed), [])
 
     const [playlistState, setPlaylistState] = React.useState({
         position: 0,
@@ -37,8 +42,10 @@ const Playlist = ({ message$ }: Props) => {
 
     React.useEffect(() => {
         const subscription = message$
-            .pipe(filter((message: Message) => message.kind == Message.Kind.Playlist))
-            .pipe(map((message: Message.Playlist) => message.playlistState))
+            .pipe(
+                filter((message: Message) => message.kind == Message.Kind.Playlist),
+                map((message: Message.Playlist) => message.playlistState)
+            )
             .subscribe(setPlaylistState)
 
         return () => { subscription.unsubscribe() }
@@ -53,7 +60,7 @@ const Playlist = ({ message$ }: Props) => {
                 current={playlistState.position}
                 total={playlistState.tracks.length} />
             <SeekBar
-                elapsed={playerState.elapsed}
+                elapsed={elapsed}
                 duration={playerState.duration}
                 onSeek={seek} />
             <TrackList

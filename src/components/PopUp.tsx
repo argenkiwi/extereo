@@ -15,7 +15,7 @@ const PopUp = ({ message$ }: Props) => {
 
     React.useEffect(() => {
         scan(tracks => setTracks(tracks))
-    })
+    }, [])
 
     const showFound = tracks && tracks.length > 0
     return (

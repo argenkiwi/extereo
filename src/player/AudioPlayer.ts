@@ -1,5 +1,5 @@
-import { fromEvent, Observable, merge, timer } from 'rxjs';
-import { map, debounce } from 'rxjs/operators';
+import { fromEvent, merge, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import PlayerEvent from '../model/PlayerEvent';
 import Track from '../model/Track';
 import Player from './Player';
@@ -7,7 +7,7 @@ import Player from './Player';
 class AudioPlayer implements Player {
     private audio = document.createElement('audio')
 
-    event$: Observable<PlayerEvent> = merge(
+    event$ = merge(
         fromEvent(this.audio, 'play')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Play
@@ -21,21 +21,25 @@ class AudioPlayer implements Player {
                 kind: PlayerEvent.Kind.DurationChange,
                 duration: this.audio.duration
             }) as PlayerEvent)),
-        fromEvent(this.audio, 'timeupdate')
-            .pipe(debounce(() => timer(100)))
-            .pipe(map(_ => ({
-                kind: PlayerEvent.Kind.TimeUpdate,
-                time: this.audio.currentTime
-            }) as PlayerEvent)),
         fromEvent(this.audio, 'ended')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Ended
-            }) as PlayerEvent)),
-        fromEvent(this.audio, 'error')
-            .pipe(map(_ => ({
-                kind: PlayerEvent.Kind.Error
             }) as PlayerEvent))
-    );
+    )
+
+    constructor() {
+        const timeupdate$ = fromEvent(this.audio, 'timeupdate')
+            .pipe(
+                debounce(() => timer(100)),
+                map(_ => this.audio.currentTime)
+            )
+
+        chrome.runtime.onConnect.addListener(function (port) {
+            console.assert(port.name == "timeupdate");
+            const subscription = timeupdate$.subscribe(time => port.postMessage(time))
+            port.onDisconnect.addListener(_ => subscription.unsubscribe())
+        });
+    }
 
     load(track?: Track) {
         if (track) {

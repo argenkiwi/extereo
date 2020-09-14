@@ -31,6 +31,10 @@ class AudioPlayer implements Player {
         fromEvent(this.audio, 'ended')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Ended
+            }) as PlayerEvent)),
+        fromEvent(this.audio, 'error')
+            .pipe(map(_ => ({
+                kind: PlayerEvent.Kind.Error
             }) as PlayerEvent))
     )
 

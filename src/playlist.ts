@@ -15,7 +15,10 @@ const player: Player = new AudioPlayer()
 player.event$.subscribe(event => playerModel.publish(event))
 
 player.event$
-    .pipe(filter(event => event.kind == PlayerEvent.Kind.Ended))
+    .pipe(filter(event => [
+        PlayerEvent.Kind.Ended,
+        PlayerEvent.Kind.Error
+    ].includes(event.kind)))
     .subscribe(_ => playlistModel.publish({ kind: PlaylistEvent.Kind.Next }))
 
 playerModel.eventObservable.subscribe(event => {

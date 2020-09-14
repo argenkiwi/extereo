@@ -31,9 +31,7 @@ const Playlist = ({ playerPort, playlistPort }: {
     } as PlaylistState)
 
     React.useEffect(() => {
-        playlistPort?.onMessage.addListener((s) => console.log(s))
         playlistPort?.onMessage.addListener((s) => setPlaylistState(s))
-        playlistPort?.postMessage({ kind: PlaylistEvent.Kind.Ping })
         return () => playlistPort?.onMessage.removeListener(setPlaylistState)
     }, [playlistPort])
 

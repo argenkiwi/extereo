@@ -19,9 +19,7 @@ type PlaylistEvent = {
     kind: PlaylistEvent.Kind.Sort,
     from: number,
     to: number
-} | {
-    kind: PlaylistEvent.Kind.Ping
-}
+} 
 
 namespace PlaylistEvent {
     export const enum Kind {
@@ -31,8 +29,7 @@ namespace PlaylistEvent {
         Previous,
         Next,
         Remove,
-        Sort,
-        Ping,
+        Sort
     }
 }
 

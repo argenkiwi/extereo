@@ -23,5 +23,9 @@ const tracks = Array.from(map, pair => ({ href: pair[0], title: pair[1] }));
 
 chrome.runtime.onMessage
     .addListener((message: Message, sender: any, callback: (tracks: Track[]) => void) => {
-        if (message.kind === Message.Kind.Scan) callback(tracks);
+        switch (message.kind) {
+            case Message.Kind.Scan:
+                callback(tracks)
+                break;
+        }
     });

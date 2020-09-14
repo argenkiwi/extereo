@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PlaylistEvent from '../model/PlaylistEvent';
 import { scan } from '../service';
 import Found from './Found';
 import Playlist from './Playlist';

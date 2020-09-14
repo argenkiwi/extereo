@@ -14,7 +14,6 @@ const TrackList = ({ tracks, position, playlistPort }: Props) => (
         {tracks.map((track, i) =>
             <TrackListItem
                 index={i}
-                key={track.href}
                 position={i}
                 isCurrent={position == i}
                 track={track}

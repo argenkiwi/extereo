@@ -5,10 +5,11 @@ import TrackListItem from './TrackListItem';
 
 interface Props {
     tracks: Track[]
-    position: number
+    position: number,
+    playlistPort: chrome.runtime.Port
 }
 
-const TrackList = ({ tracks, position }: Props) => (
+const TrackList = ({ tracks, position, playlistPort }: Props) => (
     <ol className="flex-1 mt-1 overflow-auto list-inside bg-gray-200 rounded p-2">
         {tracks.map((track, i) =>
             <TrackListItem
@@ -16,7 +17,9 @@ const TrackList = ({ tracks, position }: Props) => (
                 key={track.href}
                 position={i}
                 isCurrent={position == i}
-                track={track} />
+                track={track}
+                playlistPort={playlistPort}
+            />
         )}
     </ol>
 )

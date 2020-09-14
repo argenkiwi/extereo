@@ -1,5 +1,5 @@
-import { fromEvent, Observable, merge, timer } from 'rxjs';
-import { map, debounce } from 'rxjs/operators';
+import { fromEvent, merge, timer } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import PlayerEvent from '../model/PlayerEvent';
 import Track from '../model/Track';
 import Player from './Player';
@@ -7,7 +7,7 @@ import Player from './Player';
 class AudioPlayer implements Player {
     private audio = document.createElement('audio')
 
-    event$: Observable<PlayerEvent> = merge(
+    event$ = merge(
         fromEvent(this.audio, 'play')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Play
@@ -22,11 +22,12 @@ class AudioPlayer implements Player {
                 duration: this.audio.duration
             }) as PlayerEvent)),
         fromEvent(this.audio, 'timeupdate')
-            .pipe(debounce(() => timer(100)))
-            .pipe(map(_ => ({
-                kind: PlayerEvent.Kind.TimeUpdate,
-                time: this.audio.currentTime
-            }) as PlayerEvent)),
+            .pipe(
+                debounce(() => timer(100)),
+                map(_ => ({
+                    kind: PlayerEvent.Kind.TimeUpdate,
+                    time: this.audio.currentTime
+                }) as PlayerEvent)),
         fromEvent(this.audio, 'ended')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Ended
@@ -35,18 +36,19 @@ class AudioPlayer implements Player {
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Error
             }) as PlayerEvent))
-    );
+    )
 
     load(track?: Track) {
         if (track) {
-            if (track.href === this.audio.src) return;
-            this.audio.src = track.href;
-            this.audio.title = track.title;
-            this.audio.load();
-            this.audio.play();
+            if (track.href === this.audio.src) return
+            this.audio.src = track.href
+            this.audio.title = track.title
+            this.audio.load()
+            this.audio.play()
         } else {
-            this.audio.pause();
-            this.audio.src = '';
+            this.audio.pause()
+            this.audio.removeAttribute('src')
+            this.audio.load()
         }
     }
 

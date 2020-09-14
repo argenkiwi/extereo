@@ -1,39 +1,29 @@
 import * as React from 'react';
-import Message from '../model/Message';
+import PlayerEvent from '../model/PlayerEvent';
 import PlayerState from '../model/PlayerState';
+import PlaylistEvent from '../model/PlaylistEvent';
 import PlaylistState from '../model/PlaylistState';
-import { ping, seek, sort } from '../service';
+import Footer from './Footer';
 import Header from './Header';
 import SeekBar from './SeekBar';
 import TrackList from './TrackList';
-import Footer from './Footer';
-import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
-interface Props extends React.HTMLProps<HTMLDivElement> {
-    message$: Observable<Message>
-}
+const Playlist = ({ playerPort, playlistPort }: {
+    playerPort: chrome.runtime.Port,
+    playlistPort: chrome.runtime.Port
+}) => {
 
-const Playlist = ({ message$ }: Props) => {
     const [playerState, setPlayerState] = React.useState({
         duration: 0,
+        elapsed: 0,
         paused: true
     } as PlayerState)
 
-    const [elapsed, setElapsed] = React.useState(0)
-
     React.useEffect(() => {
-        const subscription = message$
-            .pipe(
-                filter(message => message.kind == Message.Kind.Player),
-                map((message: Message.Player) => message.playerState)
-            )
-            .subscribe(setPlayerState)
-
-        return () => { subscription.unsubscribe() }
-    }, [message$, setPlayerState])
-
-    React.useEffect(() => chrome.runtime.connect({ name: "timeupdate" }).onMessage.addListener(setElapsed), [])
+        playerPort?.onMessage.addListener((s) => console.log(s))
+        playerPort?.onMessage.addListener((s) => setPlayerState(s))
+        return () => playerPort?.onMessage.removeListener(setPlayerState)
+    }, [playerPort])
 
     const [playlistState, setPlaylistState] = React.useState({
         position: 0,
@@ -41,34 +31,35 @@ const Playlist = ({ message$ }: Props) => {
     } as PlaylistState)
 
     React.useEffect(() => {
-        const subscription = message$
-            .pipe(
-                filter((message: Message) => message.kind == Message.Kind.Playlist),
-                map((message: Message.Playlist) => message.playlistState)
-            )
-            .subscribe(setPlaylistState)
-
-        return () => { subscription.unsubscribe() }
-    }, [message$, setPlaylistState])
-
-    React.useEffect(() => { ping() }, [])
+        playlistPort?.onMessage.addListener((s) => console.log(s))
+        playlistPort?.onMessage.addListener((s) => setPlaylistState(s))
+        playlistPort?.postMessage({ kind: PlaylistEvent.Kind.Ping })
+        return () => playlistPort?.onMessage.removeListener(setPlaylistState)
+    }, [playlistPort])
 
     return (
         <div className="h-full flex flex-col overflow-y-auto">
             <Header
                 paused={playerState.paused}
                 current={playlistState.position}
-                total={playlistState.tracks.length} />
+                total={playlistState.tracks.length}
+                playerPort={playerPort}
+                playlistPort={playlistPort} />
             <SeekBar
-                elapsed={elapsed}
+                elapsed={playerState.elapsed}
                 duration={playerState.duration}
-                onSeek={seek} />
+                onSeek={time => playerPort?.postMessage({ kind: PlayerEvent.Kind.Seek, time })} />
             <TrackList
                 position={playlistState.position}
                 tracks={playlistState.tracks}
-                onSortEnd={({ oldIndex, newIndex }) => sort(oldIndex, newIndex)}
-                useDragHandle={true} />
-            <Footer tracks={playlistState.tracks} />
+                onSortEnd={({ oldIndex, newIndex }) => playlistPort.postMessage({
+                    kind: PlaylistEvent.Kind.Sort,
+                    from: oldIndex,
+                    to: newIndex
+                })}
+                useDragHandle={true}
+                playlistPort={playlistPort} />
+            <Footer tracks={playlistState.tracks} playlistPort={playlistPort} />
         </div>
     )
 }

@@ -1,21 +1,24 @@
 import * as React from 'react';
+import PlaylistEvent from '../model/PlaylistEvent';
 import Track from '../model/Track';
-import { clear } from '../service';
 import Button from './Button';
 
-const Footer = ({ tracks }: { tracks: Track[] }) => (
-    <div className="flex justify-end mt-2">
-        <Button
-            disabled={!tracks.length}
-            onClick={() => allowDownload(tracks)}
-        >Export</Button>
-        <Button
-            className="ml-1"
-            disabled={!tracks.length}
-            onClick={() => clear()}
-        >Clear</Button>
-    </div>
-)
+const Footer = ({ tracks, playlistPort }: {
+    tracks: Track[],
+    playlistPort: chrome.runtime.Port
+}) => (
+        <div className="flex justify-end mt-2">
+            <Button
+                disabled={!tracks.length}
+                onClick={() => allowDownload(tracks)}
+            >Export</Button>
+            <Button
+                className="ml-1"
+                disabled={!tracks.length}
+                onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Clear })}
+            >Clear</Button>
+        </div>
+    )
 
 function allowDownload(tracks: Track[]) {
     chrome.permissions.contains({

@@ -1,17 +1,18 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { SortableElement } from 'react-sortable-hoc';
-import { jump, remove } from '../service';
+import PlaylistEvent from '../model/PlaylistEvent';
 import Track from '../model/Track';
 import Handle from './Handle';
-import { useEffect } from 'react';
 
 interface Props extends React.HTMLProps<HTMLLIElement> {
     isCurrent: boolean;
     track: Track;
     position: number;
+    playlistPort: chrome.runtime.Port
 }
 
-const TrackListItem = ({ isCurrent, track, position }: Props) => {
+const TrackListItem = ({ isCurrent, track, position, playlistPort }: Props) => {
 
     const ref = React.useRef(null)
 
@@ -28,10 +29,14 @@ const TrackListItem = ({ isCurrent, track, position }: Props) => {
                     <strong>{track.title}</strong> :
                     <span>{track.title}</span>}
             </a>
-            <button onClick={() => jump(position)} disabled={isCurrent} className="ml-1 hidden group-hover:inline">
+            <button
+                onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Jump, position })}
+                disabled={isCurrent} className="ml-1 hidden group-hover:inline">
                 <i className="icon-play-circled"></i>
             </button>
-            <button onClick={() => remove(position)} className="mx-1 hidden group-hover:inline">
+            <button
+                onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Remove, position })}
+                className="mx-1 hidden group-hover:inline">
                 <i className="icon-cancel-circled"></i>
             </button>
             <Handle />

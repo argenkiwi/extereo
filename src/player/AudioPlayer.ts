@@ -21,36 +21,30 @@ class AudioPlayer implements Player {
                 kind: PlayerEvent.Kind.DurationChange,
                 duration: this.audio.duration
             }) as PlayerEvent)),
+        fromEvent(this.audio, 'timeupdate')
+            .pipe(
+                debounce(() => timer(100)),
+                map(_ => ({
+                    kind: PlayerEvent.Kind.TimeUpdate,
+                    time: this.audio.currentTime
+                }) as PlayerEvent)),
         fromEvent(this.audio, 'ended')
             .pipe(map(_ => ({
                 kind: PlayerEvent.Kind.Ended
             }) as PlayerEvent))
     )
 
-    constructor() {
-        const timeupdate$ = fromEvent(this.audio, 'timeupdate')
-            .pipe(
-                debounce(() => timer(100)),
-                map(_ => this.audio.currentTime)
-            )
-
-        chrome.runtime.onConnect.addListener(function (port) {
-            console.assert(port.name == "timeupdate");
-            const subscription = timeupdate$.subscribe(time => port.postMessage(time))
-            port.onDisconnect.addListener(_ => subscription.unsubscribe())
-        });
-    }
-
     load(track?: Track) {
         if (track) {
-            if (track.href === this.audio.src) return;
-            this.audio.src = track.href;
-            this.audio.title = track.title;
-            this.audio.load();
-            this.audio.play();
+            if (track.href === this.audio.src) return
+            this.audio.src = track.href
+            this.audio.title = track.title
+            this.audio.load()
+            this.audio.play()
         } else {
-            this.audio.pause();
-            this.audio.src = '';
+            this.audio.pause()
+            this.audio.removeAttribute('src')
+            this.audio.load()
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "extereo",
-  "version": "4.1",
+  "version": "4.1.1",
   "description": "A Chrome Extension to stream audio directly from the sites you visit.",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-sortable-hoc": "^0.7.1",
+    "bufferutil": "^4.0.1",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
     "postcss": "^7.0.32",
@@ -38,6 +39,7 @@
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.7",
     "url-loader": "^4.1.0",
+    "utf-8-validate": "^5.0.2",
     "web-ext": "^5.0.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

@@ -5,7 +5,6 @@ import PlayerEvent from './model/PlayerEvent';
 import { playerModel } from './model/PlayerModel';
 import PlaylistEvent from './model/PlaylistEvent';
 import { playlistModel } from './model/PlaylistModel';
-import PlaylistState from './model/PlaylistState';
 import Track from './model/Track';
 import AudioPlayer from './player/AudioPlayer';
 import Player from './player/Player';
@@ -15,10 +14,7 @@ const player: Player = new AudioPlayer()
 player.event$.subscribe(event => playerModel.publish(event))
 
 player.event$
-    .pipe(filter(event => [
-        PlayerEvent.Kind.Ended,
-        PlayerEvent.Kind.Error
-    ].includes(event.kind)))
+    .pipe(filter(({ kind }) => Array.of(PlayerEvent.Kind.Ended, PlayerEvent.Kind.Error).includes(kind)))
     .subscribe(_ => playlistModel.publish({ kind: PlaylistEvent.Kind.Next }))
 
 playerModel.eventObservable.subscribe(event => {
@@ -36,10 +32,33 @@ playerModel.eventObservable.subscribe(event => {
 })
 
 playlistModel.stateObservable
-    .pipe(map((state: PlaylistState) => state.position < state.tracks.length
-        ? state.tracks[state.position]
-        : null))
+    .pipe(map(({ position, tracks }) => position < tracks.length ? tracks[position] : null))
     .subscribe((track: Track) => player.load(track))
+
+const configure = <S, E>(port: chrome.runtime.Port, model: StateEventModel<S, E>) => {
+    const subscriptions: Subscription[] = [];
+
+    subscriptions.push(fromEventPattern(
+        h => port.onMessage.addListener(h),
+        h => port.onMessage.removeListener(h)
+    ).pipe(map(([e, _]: [E, any]) => e))
+        .subscribe(e => model.publish(e)));
+
+    subscriptions.push(model.stateObservable.subscribe(s => port.postMessage(s)));
+
+    port.onDisconnect.addListener(_ => subscriptions.forEach(s => s.unsubscribe()));
+}
+
+chrome.runtime.onConnect.addListener(port => {
+    switch (port.name) {
+        case 'player':
+            configure(port, playerModel)
+            break
+        case 'playlist':
+            configure(port, playlistModel)
+            break
+    }
+})
 
 fromEventPattern(
     h => chrome.commands.onCommand.addListener(h),
@@ -54,31 +73,6 @@ fromEventPattern(
             break
         case 'next-track':
             playlistModel.publish({ kind: PlaylistEvent.Kind.Next })
-            break
-    }
-})
-
-function configure<S, E>(port: chrome.runtime.Port, model: StateEventModel<S, E>) {
-    const subscriptions: Subscription[] = [];
-
-    subscriptions.push(fromEventPattern(
-        h => port.onMessage.addListener(h),
-        h => port.onMessage.removeListener(h),
-    ).pipe(map(([e, _]: [E, any]) => e))
-        .subscribe(e => model.publish(e)))
-
-    subscriptions.push(model.stateObservable.subscribe(s => port.postMessage(s)))
-
-    port.onDisconnect.addListener(_ => subscriptions.forEach(s => s.unsubscribe()));
-}
-
-chrome.runtime.onConnect.addListener(port => {
-    switch (port.name) {
-        case 'player':
-            configure(port, playerModel)
-            break
-        case 'playlist':
-            configure(port, playlistModel)
             break
     }
 })

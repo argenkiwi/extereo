@@ -26,13 +26,12 @@ const TrackListItem = ({ isCurrent, track, position, playlistPort }: Props) => {
         <li ref={ref} className="flex items-center p-1 hover:bg-gray-300 group">
             <button
                 onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Jump, position })}
-                disabled={isCurrent} className="truncate">
+                disabled={isCurrent} className="p-1 flex-1 text-left hover:text-blue-700 truncate">
                 {isCurrent ?
                     <strong>{track.title}</strong> :
                     <span>{track.title}</span>}
             </button>
-            <span className="flex-1" />
-            <a href={track.href} target="_blank" className="ml-1 hidden group-hover:inline text-gray-700 w-4 h-4">
+            <a href={track.href} target="_blank" className="ml-1 hidden group-hover:inline text-blue-500 hover:text-blue-700 w-4 h-4">
                 <svg x="0px" y="0px" viewBox="0 0 20 20" xmlSpace="preserve" >
                     <path
                         fill="currentColor"
@@ -42,7 +41,7 @@ const TrackListItem = ({ isCurrent, track, position, playlistPort }: Props) => {
             </a>
             <button
                 onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Remove, position })}
-                className="mx-1 hidden group-hover:inline text-gray-700 w-4 h-4">
+                className="mx-1 hidden group-hover:inline text-gray-600 hover:text-gray-700 w-4 h-4">
                 <svg x="0px" y="0px" viewBox="0 0 20 20" xmlSpace="preserve">
                     <path
                         fill="currentColor"

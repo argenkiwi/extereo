@@ -8,11 +8,11 @@ interface Props extends React.HTMLProps<HTMLLIElement> {
 }
 
 const FoundItem = ({ track, playlistPort }: Props) => (
-    <li className="flex items-center justify-between group hover:bg-gray-300 p-1">
-        <button onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Add, tracks: [track] })} className="truncate">
+    <li className="flex items-center group hover:bg-gray-300 p-1">
+        <button onClick={() => playlistPort.postMessage({ kind: PlaylistEvent.Kind.Add, tracks: [track] })} className="p-1 flex-1 text-left hover:text-blue-700 truncate">
             {track.title}
         </button>
-        <a href={track.href} target="_blank" className="hidden group-hover:inline ml-2 text-gray-700 w-4 h-4">
+        <a href={track.href} target="_blank" className="hidden group-hover:inline ml-2 text-blue-500 hover:text-blue-700 w-4 h-4">
             <svg x="0px" y="0px" viewBox="0 0 20 20" xmlSpace="preserve" >
                 <path
                     fill="currentColor"

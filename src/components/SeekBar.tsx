@@ -23,9 +23,9 @@ const SeekBar = (props: Props) => {
     const precision = 1000;
     const { onSeek, onSeeking } = props;
 
-    const onMouseDown = () => setSeeking(true)
+    const onPointerDown = () => setSeeking(true)
 
-    const onMouseUp = () => {
+    const onPointerUp = () => {
         setSeeking(false)
         if (onSeek) onSeek(elapsed)
     }
@@ -45,8 +45,8 @@ const SeekBar = (props: Props) => {
                 max={precision}
                 step={.2}
                 value={duration > 0 ? elapsed * precision / duration : 0}
-                onMouseDown={onMouseDown}
-                onMouseUp={onMouseUp}
+                onPointerDown={onPointerDown}
+                onPointerUp={onPointerUp}
                 onChange={onChange}
             />
             <div className="flex justify-between">

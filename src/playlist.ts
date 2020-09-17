@@ -1,5 +1,5 @@
 import { fromEventPattern, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, last, map, withLatestFrom } from 'rxjs/operators';
 import StateEventModel from './core/StateEventModel';
 import PlayerEvent from './model/PlayerEvent';
 import { playerModel } from './model/PlayerModel';
@@ -29,6 +29,50 @@ playerModel.eventObservable.subscribe(event => {
             player.seek(event.time)
             break
     }
+})
+
+const exportToHTML = (tracks: Track[]) => {
+    const html = document.implementation.createHTMLDocument('Extereo Playlist');
+    const ul = html.createElement('ol');
+    tracks.forEach(track => {
+        const li = html.createElement('li');
+        const a = html.createElement('a');
+        a.href = track.href;
+        a.innerText = track.title;
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+    html.body.appendChild(ul);
+
+    const blob = new Blob(['<!doctype html>', html.documentElement.outerHTML], {
+        type: 'text/html'
+    });
+
+    chrome.downloads.download({
+        url: URL.createObjectURL(blob),
+        filename: 'playlist.html',
+        saveAs: true
+    });
+}
+
+playlistModel.eventObservable.pipe(
+    filter(event => event.kind === PlaylistEvent.Kind.Export),
+    withLatestFrom(playlistModel.stateObservable),
+    map(([_, state]) => state)
+).subscribe(function (state) {
+    chrome.permissions.contains({
+        permissions: ['downloads']
+    }, result => {
+        if (result) {
+            exportToHTML(state.tracks)
+        } else {
+            chrome.permissions.request({
+                permissions: ['downloads']
+            }, granted => {
+                if (granted) exportToHTML(state.tracks)
+            });
+        }
+    })
 })
 
 playlistModel.stateObservable

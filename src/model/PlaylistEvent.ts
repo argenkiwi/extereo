@@ -1,25 +1,13 @@
 import Track from "./Track";
 
-type PlaylistEvent = {
-    kind: PlaylistEvent.Kind.Add
-    tracks: Track[]
-} | {
-    kind: PlaylistEvent.Kind.Clear
-} | {
-    kind: PlaylistEvent.Kind.Jump,
-    position: number
-} | {
-    kind: PlaylistEvent.Kind.Previous
-} | {
-    kind: PlaylistEvent.Kind.Next
-} | {
-    kind: PlaylistEvent.Kind.Remove,
-    position: number
-} | {
-    kind: PlaylistEvent.Kind.Sort,
-    from: number,
-    to: number
-} 
+type PlaylistEvent = { kind: PlaylistEvent.Kind.Add, tracks: Track[] }
+    | { kind: PlaylistEvent.Kind.Clear }
+    | { kind: PlaylistEvent.Kind.Jump, position: number }
+    | { kind: PlaylistEvent.Kind.Previous }
+    | { kind: PlaylistEvent.Kind.Next }
+    | { kind: PlaylistEvent.Kind.Remove, position: number }
+    | { kind: PlaylistEvent.Kind.Sort, from: number, to: number }
+    | { kind: PlaylistEvent.Kind.Export }
 
 namespace PlaylistEvent {
     export const enum Kind {
@@ -29,7 +17,8 @@ namespace PlaylistEvent {
         Previous,
         Next,
         Remove,
-        Sort
+        Sort,
+        Export
     }
 }
 

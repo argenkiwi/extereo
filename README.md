@@ -1,4 +1,4 @@
-This is the source code for [Extereo Audio Player](https://chrome.google.com/webstore/detail/extereo-audio-player/aokleaidncgnfejhkddhfobfffalfilm), the chrome extension that scans for HTML5 supported audio in the websites you visit and lets you create playlists and bookmarks with it.
+This is the source code for [Extereo Audio Player](https://chrome.google.com/webstore/detail/extereo-audio-player/aokleaidncgnfejhkddhfobfffalfilm), the chrome extension that scans for HTML5 supported audio in the websites you visit and lets you create playlists with it.
 
 ## Prerequisites
 - Node and npm

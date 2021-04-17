@@ -4,11 +4,10 @@ module.exports = {
   entry: {
     badge: './src/badge.ts',
     content: './src/content.ts',
-    playlist: './src/playlist.ts',
     popup: './src/popup.tsx'
   },
   output: {
-    path: __dirname + '/dist/js',
+    path: __dirname + '/dist',
     filename: '[name].bundle.js'
   },
   devtool: 'source-map',

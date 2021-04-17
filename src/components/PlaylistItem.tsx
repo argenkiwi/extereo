@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { add } from '../service';
 import Track from '../model/Track';
 import FoundItem from './FoundItem';
 import './PlaylistItem.css';
@@ -35,8 +34,7 @@ const PlaylistItem = ({ track }: Props) => {
         <ol className="PlaylistItem">
             <li key={track.href}>
                 <span>{track.title}</span>
-                {tracks.length > 0 ?
-                    <button onClick={() => add(...tracks)}>Add All</button> :
+                {tracks.length > 0 &&
                     <button onClick={() => load(track.href)}>Load</button>
                 }
             </li>

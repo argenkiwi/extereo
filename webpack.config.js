@@ -19,11 +19,15 @@ module.exports = {
     rules: [
       {
         test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=../fonts/[hash].[ext]'
+        use: [
+          { loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=../fonts/[hash].[ext]' }
+        ]
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader?name=../fonts/[hash].[ext]'
+        use: [
+          { loader: 'file-loader?name=../fonts/[hash].[ext]' }
+        ]
       }, {
         test: /\.css$/,
         use: [
@@ -32,8 +36,8 @@ module.exports = {
           'postcss-loader',
         ],
       },
-      { test: /\.tsx?$/, loader: 'ts-loader' },
-      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
+      { test: /\.tsx?$/, use: 'ts-loader' },
+      { enforce: 'pre', test: /\.js$/, use: 'source-map-loader' }
     ]
   },
   optimization: {

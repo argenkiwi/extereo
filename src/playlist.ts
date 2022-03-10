@@ -52,7 +52,7 @@ const exportToHTML = (tracks: Track[]) => {
         url: URL.createObjectURL(blob),
         filename: 'playlist.html',
         saveAs: true
-    });
+    }, downloadId => chrome.downloads.open(downloadId));
 }
 
 playlistModel.eventObservable.pipe(

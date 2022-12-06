@@ -1,8 +1,8 @@
 import Track from './Track';
 
 interface PlaylistState {
-    position: number
-    tracks: Track[]
+  position: number
+  tracks: Track[]
 }
 
 export default PlaylistState;

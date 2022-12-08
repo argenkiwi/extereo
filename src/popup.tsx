@@ -4,6 +4,6 @@ import PopUp from './components/PopUp';
 import './styles/tailwind.css';
 
 ReactDOM.render(
-    <PopUp />,
-    document.getElementById('root')
+  <PopUp />,
+  document.getElementById('root')
 )

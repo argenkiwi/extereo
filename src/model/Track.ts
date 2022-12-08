@@ -1,6 +1,6 @@
 interface Track {
-    href: string;
-    title: string;
+  href: string;
+  title: string;
 }
 
 export default Track;

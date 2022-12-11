@@ -9,3 +9,4 @@ export function scan(callback: (response: Track[]) => void) {
     kind: Message.Kind.Scan
   }, callback)))
 }
+
